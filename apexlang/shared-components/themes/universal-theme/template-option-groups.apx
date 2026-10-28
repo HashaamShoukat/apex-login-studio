@@ -1,0 +1,120 @@
+templateOptionGroup ml-design (
+    templateType: page
+    name: Design
+    sequence: 5
+    settings {
+        nullText: Classic
+    }
+    help {
+        helpText: The overall look. Classic follows the Layout, Card Style and Background options as they are; the other designs bring their own shapes and colours, which Accent Color, Color Scheme and Background still change.
+    }
+)
+
+templateOptionGroup ml-accent (
+    templateType: page
+    name: Accent Color
+    sequence: 40
+    settings {
+        nullText: Theme Color
+    }
+)
+
+templateOptionGroup ml-background (
+    templateType: page
+    name: Background
+    sequence: 20
+    settings {
+        nullText: Aurora
+    }
+    help {
+        helpText: The page background. Waves, Topography, Peaks, Rings and Grid Lines are built-in artwork drawn in the accent colours. Image uses the picture in the Background Image slot (an Image region or any region with an img); the panel designs show it inside their panel.
+    }
+)
+
+templateOptionGroup ml-card-style (
+    templateType: page
+    name: Card Style
+    sequence: 30
+    settings {
+        nullText: Elevated
+    }
+)
+
+templateOptionGroup ml-corners (
+    templateType: page
+    name: Corners
+    sequence: 70
+    settings {
+        nullText: Rounded
+    }
+    advanced {
+        isAdvancedOption: true
+    }
+)
+
+templateOptionGroup ml-header-align (
+    templateType: page
+    name: Header Alignment
+    sequence: 80
+    settings {
+        nullText: Centered
+    }
+    advanced {
+        isAdvancedOption: true
+    }
+)
+
+templateOptionGroup ml-layout (
+    templateType: page
+    name: Layout
+    sequence: 10
+    settings {
+        nullText: Centered Card
+    }
+    help {
+        helpText: Where the sign-in form sits. Split and Floating Panel show the Brand Panel slot next to the form. Curved Panel and Arc designs have their own layout.
+    }
+)
+
+templateOptionGroup ml-phone (
+    templateType: page
+    name: On Phones
+    sequence: 56
+    settings {
+        nullText: Floating Card
+    }
+)
+
+templateOptionGroup ml-scheme (
+    templateType: page
+    name: Color Scheme
+    sequence: 50
+    settings {
+        nullText: Light
+    }
+)
+
+templateOptionGroup ml-split (
+    templateType: page
+    name: Split Width
+    sequence: 52
+    settings {
+        nullText: Form 40%
+    }
+    help {
+        helpText: Width of the form column in the Split and Floating Panel layouts on wide screens.
+    }
+)
+
+templateOptionGroup ml-width (
+    templateType: page
+    name: Form Width
+    sequence: 60
+    settings {
+        nullText: Regular
+    }
+    advanced {
+        isAdvancedOption: true
+    }
+)
+

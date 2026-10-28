@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <rect width="1600" height="1000" fill="#1e1b4b"/>
+  <g stroke="#ffffff" stroke-opacity=".06" stroke-width="1">
+    <path d="M0 0L320 0L180 260Z" fill="#312e81"/>
+    <path d="M320 0L700 0L520 300Z" fill="#3730a3"/>
+    <path d="M320 0L520 300L180 260Z" fill="#2e2a7a"/>
+    <path d="M700 0L1100 0L900 280Z" fill="#4338ca"/>
+    <path d="M700 0L900 280L520 300Z" fill="#3b35b0"/>
+    <path d="M1100 0L1600 0L1380 320Z" fill="#6d28d9"/>
+    <path d="M1100 0L1380 320L900 280Z" fill="#5b21b6"/>
+    <path d="M1600 0L1600 420L1380 320Z" fill="#7c3aed"/>
+    <path d="M0 0L180 260L0 470Z" fill="#272466"/>
+    <path d="M180 260L520 300L340 600Z" fill="#312e81"/>
+    <path d="M0 470L180 260L340 600Z" fill="#26215f"/>
+    <path d="M520 300L900 280L760 620Z" fill="#4338ca"/>
+    <path d="M520 300L760 620L340 600Z" fill="#3730a3"/>
+    <path d="M900 280L1380 320L1160 640Z" fill="#6d28d9"/>
+    <path d="M900 280L1160 640L760 620Z" fill="#5b21b6"/>
+    <path d="M1380 320L1600 420L1600 760Z" fill="#8b5cf6"/>
+    <path d="M1380 320L1600 760L1160 640Z" fill="#7c3aed"/>
+    <path d="M0 470L340 600L0 860Z" fill="#1e1b4b"/>
+    <path d="M340 600L760 620L520 920Z" fill="#312e81"/>
+    <path d="M0 860L340 600L520 920Z" fill="#221f55"/>
+    <path d="M760 620L1160 640L980 960Z" fill="#4c1d95"/>
+    <path d="M760 620L980 960L520 920Z" fill="#3b1a7a"/>
+    <path d="M1160 640L1600 760L1420 1000Z" fill="#6d28d9"/>
+    <path d="M1160 640L1420 1000L980 960Z" fill="#581c87"/>
+    <path d="M1600 760L1600 1000L1420 1000Z" fill="#7e22ce"/>
+    <path d="M0 860L520 920L0 1000Z" fill="#1a1745"/>
+    <path d="M520 920L980 960L520 1000Z" fill="#2e1065"/>
+    <path d="M520 1000L980 960L1420 1000Z" fill="#3b0764"/>
+    <path d="M0 1000L520 920L520 1000Z" fill="#1a1745"/>
+  </g>
+  <circle cx="1240" cy="220" r="160" fill="#c084fc" opacity=".18"/>
+  <circle cx="300" cy="760" r="220" fill="#22d3ee" opacity=".1"/>
+</svg>

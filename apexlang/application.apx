@@ -1,0 +1,66 @@
+app LOGIN-STUDIO (
+    name: Login Studio
+    logo {
+        type: text
+        text: Login Studio
+    }
+    navigation {
+        homeUrl: {
+            page: 1
+        }
+        loginUrl: {
+            page: LOGIN
+        }
+    }
+    navigationMenu {
+        listTemplate: @/side-navigation-menu
+        templateOptions: [
+            #DEFAULT#
+            js-defaultCollapsed
+            js-navCollapsed--hidden
+            t-TreeNav--styleA
+        ]
+        list: @navigation-menu
+    }
+    navigationBar {
+        list: @navigation-bar
+        listTemplate: @/navigation-bar
+        templateOptions: #DEFAULT#
+    }
+    userInterface {
+        currentTheme: @universal-theme
+        globalPage: 0
+        addBuiltWithApexToFooter: false
+        autoDismissSuccessMessages: true
+    }
+    appFormatMasks {
+        date: DD-MON-YYYY
+        timestamp: DS
+        timestampTimeZone: DS
+    }
+    authentication {
+        scheme: @oracle-apex-accounts
+    }
+    authorization {
+        sourceForRoleOrGroupSchemes: authenticationScheme
+    }
+    security {
+        deepLinking: true
+        embedInFrames: allowSameOrigin
+    }
+    sessionStateProtection {
+        checksumSalt: 6F1C2B8E4A7D9035C1E8F24B6A903D7E5C2F81A4B9D06E3F7A1C5B8240E9D6F3
+    }
+    sessionManagement {
+        maxSessionLength: 28800
+        maxSessionIdleTime: 7200
+    }
+
+    substitution APP_NAME (
+        value {
+            staticValue: Login Studio
+        }
+    )
+
+)
+

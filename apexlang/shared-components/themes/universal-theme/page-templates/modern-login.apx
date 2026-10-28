@@ -1,0 +1,1697 @@
+pageTemplate modern-login (
+    name: Modern Login
+    templateClass: login
+    templateOptions {
+        default: [
+            ml-Anim--entrance
+            ml-Anim--bg
+            ml-Fx--busy
+            ml-Fx--shake
+            ml-Fx--offline
+            ml-Fx--slides
+        ]
+    }
+    page {
+        header:
+            ```html
+            <!DOCTYPE html>
+            <html class="no-js #RTL_CLASS# page-&APP_PAGE_ID!ATTR. app-&APP_ALIAS!ATTR." lang="&BROWSER_LANGUAGE!ATTR." #TEXT_DIRECTION#>
+            <head>
+              <meta charset="utf-8">
+              <title>#TITLE#</title>
+              #APEX_CSS#
+              #THEME_CSS#
+              #TEMPLATE_CSS#
+            <style id="ml-css-2">
+            /* slides (carousel) */
+            .ml-Slides { display: grid; }
+            .ml-Slides > * { grid-area: 1 / 1; transition: opacity .5s ease, transform .5s ease, visibility .5s; }
+            .ml-Slides > *:not(:first-child) { visibility: hidden; opacity: 0; }
+            .ml-Slides.is-ready > * { visibility: hidden; opacity: 0; transform: translateY(6px); }
+            .ml-Slides.is-ready > .is-active { visibility: visible; opacity: 1; transform: none; }
+            .ml-Dots { display: flex; gap: .625rem; margin-block-start: 1rem; }
+            .ml-Dot { position: relative; width: .5rem; height: .5rem; padding: 0; border: 0; border-radius: 999px; background: currentColor; opacity: .35; cursor: pointer; transition: width .3s ease, opacity .3s ease; }
+            .ml-Dot::before { content: ""; position: absolute; inset: -.75rem -.25rem; }
+            .ml-Dot.is-active { width: 1.5rem; opacity: .9; }
+            
+            /* split and floating layouts (wide screens) */
+            @media (min-width: 861px) {
+              .ml-Layout--splitRight .ml-Shell, .ml-Layout--floating .ml-Shell {
+                grid-template-columns: minmax(0, 1fr) minmax(26rem, var(--ml-split-form)); grid-template-areas: "brand top" "brand main";
+              }
+              .ml-Layout--splitLeft .ml-Shell, .ml-Layout--floatingLeft .ml-Shell {
+                grid-template-columns: minmax(26rem, var(--ml-split-form)) minmax(0, 1fr); grid-template-areas: "top brand" "main brand";
+              }
+              .ml-Layout--splitRight .ml-TopBar, .ml-Layout--splitLeft .ml-TopBar { background: var(--ml-surface); color: var(--ml-text); padding-inline: clamp(1.5rem, 4vw, 4rem); }
+              .ml-Layout--splitRight .ml-TopBar { box-shadow: -1px 0 0 var(--ml-border); }
+              .ml-Layout--splitLeft .ml-TopBar { box-shadow: 1px 0 0 var(--ml-border); }
+              .ml-Layout--floating .ml-TopBar, .ml-Layout--floatingLeft .ml-TopBar { padding-inline: clamp(1rem, 4vw, 4rem); }
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand, .ml-Layout--floating .ml-Brand, .ml-Layout--floatingLeft .ml-Brand {
+                display: flex; align-items: center; justify-content: center; padding: clamp(2rem, 6vw, 5rem);
+              }
+              .ml-Layout--splitRight .ml-Brand::before, .ml-Layout--splitLeft .ml-Brand::before {
+                content: ""; position: absolute; inset: 0;
+                background: linear-gradient(150deg, color-mix(in srgb, var(--ml-accent) 80%, transparent), color-mix(in srgb, var(--ml-accent-2) 58%, transparent));
+              }
+              .ml-Layout--splitRight .ml-Main, .ml-Layout--splitLeft .ml-Main { --ml-on-bg: var(--ml-muted); --ml-on-bg-strong: var(--ml-text); background: var(--ml-surface); padding-inline: clamp(1.5rem, 4vw, 4rem); }
+              .ml-Layout--splitRight .ml-Main { box-shadow: -1px 0 0 var(--ml-border); }
+              .ml-Layout--splitLeft .ml-Main { box-shadow: 1px 0 0 var(--ml-border); }
+              .ml-Layout--splitRight .ml-Card, .ml-Layout--splitLeft .ml-Card {
+                padding: 0; background: transparent; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none;
+              }
+              .ml-Layout--floating .ml-Brand, .ml-Layout--floatingLeft .ml-Brand { color: var(--ml-on-bg-strong); }
+              .ml-Layout--floating .ml-Main, .ml-Layout--floatingLeft .ml-Main { padding-inline: clamp(1rem, 4vw, 4rem); }
+              .ml-Shell:has(.ml-Brand-inner:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "main"; }
+              .ml-Shell:has(.ml-Brand-inner:empty) .ml-Brand { display: none; }
+            }
+            
+            /* phones and portrait tablets: the brand panel becomes a banner above the form, the top bar sits on the banner */
+            @media (max-width: 860px) {
+              :is(.ml-Layout--splitRight, .ml-Layout--splitLeft, .ml-Layout--floating, .ml-Layout--floatingLeft) .ml-Shell {
+                grid-template-rows: auto auto 1fr; grid-template-areas: "top" "brand" "main";
+              }
+              :is(.ml-Layout--splitRight, .ml-Layout--splitLeft, .ml-Layout--floating, .ml-Layout--floatingLeft):not(.ml-Brand-hideMobile) .ml-Shell:has(.ml-Brand-inner:not(:empty)) .ml-TopBar {
+                grid-area: brand; align-self: start; background: none; color: var(--ml-on-bg-strong);
+              }
+              :is(.ml-Layout--splitRight, .ml-Layout--splitLeft):not(.ml-Brand-hideMobile) .ml-Shell:has(.ml-Brand-inner:not(:empty)) .ml-TopBar { color: #ffffff; }
+              :is(.ml-Layout--splitRight, .ml-Layout--splitLeft, .ml-Layout--floating, .ml-Layout--floatingLeft) .ml-Shell:has(.ml-TopBar:not(:empty)) .ml-Brand {
+                padding-top: calc(4rem + env(safe-area-inset-top)) !important;
+              }
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand, .ml-Layout--floating .ml-Brand, .ml-Layout--floatingLeft .ml-Brand {
+                display: block; padding: calc(2rem + env(safe-area-inset-top)) 1.25rem 1rem;
+              }
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand { padding-bottom: 3rem; }
+              .ml-Layout--splitRight .ml-Brand::before, .ml-Layout--splitLeft .ml-Brand::before {
+                content: ""; position: absolute; inset: 0;
+                background: linear-gradient(150deg, color-mix(in srgb, var(--ml-accent) 82%, transparent), color-mix(in srgb, var(--ml-accent-2) 60%, transparent));
+              }
+              .ml-Layout--floating .ml-Brand, .ml-Layout--floatingLeft .ml-Brand { color: var(--ml-on-bg-strong); }
+              .ml-Brand h1, .ml-Brand h2.ml-Hero-title { font-size: 1.75rem; margin-bottom: .5rem; }
+              .ml-Brand p { margin-bottom: 0; font-size: .9375rem; }
+              .ml-Brand ul, .ml-Brand blockquote, .ml-Brand .ml-Badge, .ml-Brand .ml-Slides, .ml-Brand .ml-Dots { display: none; }
+              .ml-Brand-hideMobile .ml-Brand, .ml-Brand:has(.ml-Brand-inner:empty) { display: none !important; }
+              .ml-Layout--splitRight .ml-Main, .ml-Layout--splitLeft .ml-Main {
+                --ml-on-bg: var(--ml-muted); --ml-on-bg-strong: var(--ml-text);
+                position: relative; margin-top: -1.5rem; border-radius: 24px 24px 0 0; background: var(--ml-surface);
+              }
+              .ml-Layout--splitRight .ml-Center, .ml-Layout--splitLeft .ml-Center, .ml-Layout--floating .ml-Center, .ml-Layout--floatingLeft .ml-Center { align-items: flex-start; }
+              .ml-Brand-hideMobile.ml-Layout--splitRight .ml-Main, .ml-Brand-hideMobile.ml-Layout--splitLeft .ml-Main { margin-top: 0; border-radius: 0; }
+              .ml-Brand-hideMobile .ml-Center { align-items: center !important; }
+              .ml-Layout--splitRight .ml-Card, .ml-Layout--splitLeft .ml-Card { padding: 0 .25rem; background: transparent; box-shadow: none; border: 0; }
+            }
+            /* portrait tablets: a roomier, centred banner */
+            @media (min-width: 600px) and (max-width: 860px) {
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand, .ml-Layout--floating .ml-Brand, .ml-Layout--floatingLeft .ml-Brand {
+                padding: calc(4rem + env(safe-area-inset-top)) 2.5rem 2.5rem; text-align: center;
+              }
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand { padding-bottom: 4rem; }
+              .ml-Brand-inner { margin-inline: auto; }
+              .ml-Brand .ml-Badge { display: inline-flex; margin-bottom: 1rem; }
+              .ml-Brand h1, .ml-Brand h2.ml-Hero-title { font-size: 2.5rem; }
+              .ml-Brand p { font-size: 1.0625rem; max-width: 32rem; margin-inline: auto; }
+              .ml-Center { padding-block: 2.5rem; }
+            }
+            /* short phones: keep the Sign In button above the fold */
+            @media (max-width: 860px) and (max-height: 720px) {
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand, .ml-Layout--floating .ml-Brand, .ml-Layout--floatingLeft .ml-Brand { padding-top: calc(1.25rem + env(safe-area-inset-top)); }
+              .ml-Layout--splitRight .ml-Brand, .ml-Layout--splitLeft .ml-Brand { padding-bottom: 2.25rem; }
+              .ml-Brand h1, .ml-Brand h2.ml-Hero-title { font-size: 1.5rem; margin-bottom: 0; }
+              .ml-Brand p { display: none; }
+              .ml-Center { padding-block: 1rem; }
+              .ml-Card { padding: 1.5rem 1.25rem; }
+              .ml-Card .t-Login-logo { --ut-login-logo-size: 2.75rem; --ut-login-logo-font-size: 1.25rem; margin-bottom: .75rem; }
+              .ml-Card .t-Login-header { padding-bottom: 1rem; }
+              .ml-Card .t-Login-title { font-size: 1.375rem; }
+            }
+            /* landscape phones: no banner, compact card */
+            @media (max-height: 520px) and (orientation: landscape) {
+              .ml-Brand { display: none !important; }
+              .ml-Shell { grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: auto 1fr !important; grid-template-areas: "top" "main" !important; }
+              .ml-Shell .ml-TopBar { grid-area: top !important; padding-top: calc(.5rem + env(safe-area-inset-top)); color: var(--ml-on-bg-strong) !important; }
+              :is(.ml-Layout--splitRight, .ml-Layout--splitLeft) .ml-Shell .ml-TopBar { background: var(--ml-surface); color: var(--ml-text) !important; }
+              .ml-Layout--splitRight .ml-Main, .ml-Layout--splitLeft .ml-Main { margin-top: 0; border-radius: 0; }
+              .ml-Center { padding-block: .75rem; align-items: center !important; }
+              .ml-Card .t-Login-logo { display: none; }
+              .ml-Card .t-Login-header { padding-bottom: .75rem; }
+              .ml-Page .ml-Lead { margin-bottom: .75rem; }
+            }
+            /* Edge to Edge on Phones: the card becomes a full-screen sheet */
+            @media (max-width: 599px) {
+              .ml-Phone--edge .ml-Main { padding-inline: 0; background: var(--ml-surface); --ml-on-bg: var(--ml-muted); --ml-on-bg-strong: var(--ml-text); }
+              .ml-Phone--edge .ml-TopBar { background: var(--ml-surface); color: var(--ml-text); }
+              .ml-Phone--edge .ml-Center { align-items: stretch; padding-block: 0; }
+              .ml-Phone--edge .ml-Card { max-width: none; border: 0; border-radius: 0; box-shadow: none; background: var(--ml-surface);
+                                         -webkit-backdrop-filter: none; backdrop-filter: none; padding: 2rem 1.5rem; }
+            }
+            /* touch screens: no hover lift */
+            @media (hover: none) {
+              .ml-Page .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI):hover { transform: none; filter: none; }
+            }
+            
+            /* call to action in the brand panel, e.g. <a class="ml-Cta" href="...">Create an account</a> */
+            .ml-Cta { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; box-sizing: border-box; min-width: 10rem; margin-block-start: .25rem;
+                      padding: .75rem 1.75rem; border: 2px solid currentColor; border-radius: var(--ml-control-radius); color: inherit !important;
+                      font-weight: 700; text-decoration: none !important; transition: background-color .15s ease; }
+            .ml-Cta:hover, .ml-Cta:focus-visible { background: color-mix(in srgb, currentColor 16%, transparent); }
+            .ml-Brand .ml-Cta { margin-block-end: .5rem; }
+            .ml-Brand .ml-Cta ~ :is(ul, blockquote, .ml-Slides) { margin-block-start: 2rem; }
+            /* checkboxes keep a visible edge in designs whose fields have no border */
+            .ml-Main { --a-checkbox-border-color: color-mix(in srgb, var(--ml-text) 32%, transparent); }
+
+            /* ================= designs ================= */
+            /* panel designs keep the brand panel short: headline, text and call to action */
+            :is(.ml-Design--curve, .ml-Design--arc, .ml-Design--wave) .ml-Brand :is(ul, blockquote, .ml-Slides, .ml-Dots, .ml-Badge) { display: none !important; }
+            :is(.ml-Design--curve, .ml-Design--arc) .ml-Brand h1, :is(.ml-Design--curve, .ml-Design--arc) .ml-Brand h2.ml-Hero-title { font-size: clamp(1.875rem, 1.3rem + 1.6vw, 2.625rem); margin-bottom: .75rem; }
+            :is(.ml-Design--curve, .ml-Design--arc) .ml-Brand p { margin-bottom: 1.5rem; font-size: 1rem; }
+            :is(.ml-Design--curve, .ml-Design--arc, .ml-Design--neon, .ml-Design--terminal) .ml-Card .t-Login-logo { display: none; }
+            :is(.ml-Design--curve, .ml-Design--arc) .ml-Card .t-Login-title { font-size: clamp(2rem, 1.6rem + 1vw, 2.5rem); font-weight: 800; }
+
+            /* Curved Panel: one card, a coloured panel with a big curve next to the form */
+            /* the card is centred with auto margins: APEX puts hidden inputs next to it in the form */
+            body.ml-Design--curve #wwvFlowForm { display: flex; flex-direction: column; box-sizing: border-box; min-height: 100vh; min-height: 100dvh; padding: clamp(.75rem, 4vh, 3rem) clamp(.75rem, 3vw, 2rem); }
+            body.ml-Design--curve .ml-Shell { margin: auto; width: min(60rem, 100%); min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr;
+                                              grid-template-areas: "top" "brand" "main"; border-radius: var(--ml-radius); background: var(--ml-surface);
+                                              box-shadow: 0 30px 70px -24px rgba(0, 0, 0, .45); overflow: hidden; }
+            body.ml-Design--curve .ml-Brand { display: block; padding: calc(2.5rem + env(safe-area-inset-top)) 1.5rem 3rem; text-align: center; color: var(--ml-on-accent);
+                                              background: var(--ml-panel-bg); border-radius: 0 0 50% 50% / 0 0 2.5rem 2.5rem; }
+            body.ml-Design--curve .ml-Brand-inner { margin-inline: auto; }
+            body.ml-Design--curve .ml-TopBar { color: var(--ml-text); }
+            @media (max-width: 860px) {
+              body.ml-Design--curve .ml-Shell:has(.ml-Brand-inner:not(:empty)) .ml-TopBar { grid-area: brand; align-self: start; z-index: 2; color: var(--ml-on-accent); }
+              body.ml-Design--curve .ml-Shell:has(.ml-TopBar:not(:empty)) .ml-Brand { padding-top: calc(4rem + env(safe-area-inset-top)); }
+            }
+            body.ml-Design--curve .ml-Main { padding: 0 clamp(1rem, 4vw, 3.5rem) 1.5rem; }
+            body.ml-Design--curve .ml-Card { max-width: 22rem; padding: 0; background: transparent; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+            body.ml-Design--curve .ml-Center { padding-block: 2rem; }
+            @media (min-width: 861px) {
+              body.ml-Design--curve .ml-Shell { min-height: 34rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "brand top" "brand main"; }
+              body.ml-Design--curve .ml-Brand { display: flex; align-items: center; justify-content: center; padding: 3rem 4rem 3rem 2.75rem; border-radius: 0 12rem 12rem 0; }
+              body.ml-Design--curve .ml-Brand-inner { max-width: 22rem; }
+              body.ml-Design--curve .ml-TopBar { padding-inline: clamp(1.5rem, 4vw, 3.5rem); }
+              body.ml-Design--curve .ml-Center { padding-block: 2.5rem; }
+            }
+
+            /* Arc: a big coloured circle sweeps in from the side, the form sits on white */
+            body.ml-Design--arc .ml-Shell { grid-template-rows: auto auto 1fr; grid-template-areas: "top" "brand" "main"; overflow: hidden; }
+            body.ml-Design--arc .ml-TopBar { grid-area: top; color: var(--ml-text); }
+            body.ml-Design--arc .ml-Shell:has(.ml-Brand-inner:not(:empty)) .ml-TopBar { grid-area: brand; align-self: start; color: var(--ml-on-accent); }
+            body.ml-Design--arc .ml-Brand { display: block; padding: calc(4rem + env(safe-area-inset-top)) 1.5rem 3.5rem; text-align: center; color: var(--ml-on-accent); }
+            body.ml-Design--arc .ml-Brand::before { content: ""; position: absolute; z-index: 0; inset: 0 -30%; border-radius: 0 0 50% 50%; background: var(--ml-panel-bg); }
+            body.ml-Design--arc .ml-Brand-inner { margin-inline: auto; }
+            body.ml-Design--arc .ml-Brand:has(.ml-Brand-inner:empty) { display: none; }
+            body.ml-Design--arc .ml-Card { background: transparent; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+            @media (min-width: 861px) {
+              body.ml-Design--arc .ml-Shell { grid-template-columns: minmax(0, 1fr) minmax(24rem, 42%); grid-template-rows: auto 1fr; grid-template-areas: "brand top" "brand main"; }
+              body.ml-Design--arc .ml-Shell:has(.ml-Brand-inner:not(:empty)) .ml-TopBar { grid-area: top; align-self: auto; color: var(--ml-text); padding-inline: clamp(1.5rem, 4vw, 4rem); }
+              body.ml-Design--arc .ml-Brand { display: flex; align-items: center; justify-content: center; padding: 3rem 9% 3rem 3rem; }
+              body.ml-Design--arc .ml-Brand::before { inset: auto; top: 50%; right: 0; width: max(190vh, 140%); aspect-ratio: 1; border-radius: 50%; transform: translateY(-50%); }
+              body.ml-Design--arc .ml-Main { padding-inline: clamp(1.5rem, 4vw, 4rem); }
+              body.ml-Design--arc .ml-Shell:has(.ml-Brand-inner:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "main"; }
+            }
+
+            /* Neon: dark card, glowing corner lines and a glowing button */
+            .ml-Design--neon .ml-Card::before, .ml-Design--neon .ml-Card::after { content: ""; position: absolute; width: 52%; height: 46%; pointer-events: none; border-radius: 3px; }
+            .ml-Design--neon .ml-Card::before { top: -3px; right: -3px; border-top: 2px solid var(--ml-accent); border-right: 2px solid var(--ml-accent); filter: drop-shadow(0 0 6px var(--ml-accent)); }
+            .ml-Design--neon .ml-Card::after { bottom: -3px; left: -3px; border-bottom: 2px solid var(--ml-accent-2); border-left: 2px solid var(--ml-accent-2); filter: drop-shadow(0 0 6px var(--ml-accent-2)); }
+            .ml-Design--neon .ml-Card .t-Login-header, .ml-Design--neon .ml-Card-header { align-items: flex-start; text-align: start; }
+            .ml-Design--neon .ml-Card .t-Login-title { color: var(--ml-accent); font-size: 2rem; text-shadow: 0 0 18px color-mix(in srgb, var(--ml-accent) 45%, transparent); }
+            .ml-Design--neon .ml-Lead { text-align: start; }
+            .ml-Design--neon .ml-Card-footer a, .ml-Design--neon .ml-Card-body a { color: var(--ml-accent-2); }
+            .ml-Page.ml-Design--neon .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) {
+              background-image: none; box-shadow: 0 0 22px color-mix(in srgb, var(--ml-accent) 70%, transparent), 0 0 46px color-mix(in srgb, var(--ml-accent) 30%, transparent);
+            }
+
+            /* Soft UI: the card and the fields are pressed out of / into the page */
+            .ml-Design--soft .ml-Card { border: 0; }
+            .ml-Design--soft .ml-Main { --a-checkbox-border-color: color-mix(in srgb, var(--ml-text) 28%, transparent); }
+            .ml-Design--soft .ml-Card .apex-item-text, .ml-Design--soft .ml-Card .apex-item-select, .ml-Design--soft .ml-Card .t-Button--passwordVisibility {
+              border-color: transparent !important; box-shadow: inset 5px 5px 10px var(--ml-soft-dark), inset -5px -5px 10px var(--ml-soft-light);
+            }
+            .ml-Design--soft .ml-Card .apex-item-text:focus, .ml-Design--soft .ml-Card .apex-item-select:focus {
+              box-shadow: inset 5px 5px 10px var(--ml-soft-dark), inset -5px -5px 10px var(--ml-soft-light), 0 0 0 3px color-mix(in srgb, var(--ml-accent) 35%, transparent);
+            }
+            .ml-Design--soft .ml-Card .t-Login-logo { background: var(--ml-bg); color: var(--ml-accent); box-shadow: 7px 7px 16px var(--ml-soft-dark), -7px -7px 16px var(--ml-soft-light); }
+            .ml-Scheme--dark.ml-Design--soft .ml-Card .t-Login-logo { color: var(--ml-accent-2); }
+            .ml-Page.ml-Design--soft .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) { box-shadow: 7px 7px 16px var(--ml-soft-dark), -7px -7px 16px var(--ml-soft-light); }
+
+            /* Minimal Line: no card, a big title, underlined fields */
+            .ml-Design--line .ml-Card { padding-inline: 0; background: transparent; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+            .ml-Design--line .ml-Card .t-Login-header, .ml-Design--line .ml-Card-header { align-items: flex-start; text-align: start; }
+            .ml-Design--line .ml-Card .t-Login-logo { --ut-login-logo-size: 2.75rem; --ut-login-logo-font-size: 1.125rem; --ut-login-logo-border-radius: 10px; box-shadow: none; }
+            .ml-Design--line .ml-Card .t-Login-title { font-size: clamp(2.25rem, 1.6rem + 1.8vw, 3rem); font-weight: 800; letter-spacing: -.045em; }
+            .ml-Design--line .ml-Lead { text-align: start; }
+            .ml-Design--line .ml-Card .apex-item-text, .ml-Design--line .ml-Card .apex-item-select, .ml-Design--line .ml-Card .t-Button--passwordVisibility {
+              border-width: 0 0 2px !important; border-radius: 0 !important; background: transparent !important;
+            }
+            .ml-Design--line .ml-Card .apex-item-text:focus, .ml-Design--line .ml-Card .apex-item-select:focus { box-shadow: 0 2px 0 0 var(--ml-accent); }
+            .ml-Design--line .ml-Card-footer { border: 0; padding-block-start: 0; text-align: start; }
+            .ml-Page.ml-Design--line .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) { background-image: none; box-shadow: none; }
+
+            /* Diagonal and Wave: the card floats over a two-tone page */
+            .ml-Page:is(.ml-Design--diagonal, .ml-Design--wave) { --ml-on-bg-strong: #ffffff; }
+            .ml-Design--wave .ml-Center { align-items: flex-start; padding-block-start: max(14vh, 4.5rem); }
+            @media (max-width: 860px) {
+              .ml-Design--diagonal .ml-Bg { background: linear-gradient(160deg, var(--ml-accent) 0 30%, var(--ml-accent-2) 30% 32%, var(--ml-bg) 32%); }
+              .ml-Design--wave .ml-Bg::before { height: max(34vh, 14rem); }
+              .ml-Design--wave .ml-Center { padding-block-start: max(9vh, 3.5rem); }
+            }
+
+            /* Bold: thick ink outlines and hard offset shadows */
+            .ml-Design--bold .ml-Card { border: 3px solid var(--ml-ink); }
+            .ml-Design--bold .ml-Card .apex-item-text, .ml-Design--bold .ml-Card .apex-item-select { border-width: 2px; border-color: var(--ml-ink); }
+            .ml-Design--bold .ml-Card .apex-item-text:focus, .ml-Design--bold .ml-Card .apex-item-select:focus { border-color: var(--ml-ink); box-shadow: 4px 4px 0 var(--ml-accent); }
+            .ml-Design--bold .ml-Card .t-Button--passwordVisibility { border: 2px solid var(--ml-ink); border-inline-start: 0; }
+            .ml-Design--bold .ml-Card .t-Login-logo { background: var(--ml-accent-2); background-image: none; color: var(--ml-ink); border: 2px solid var(--ml-ink); box-shadow: 4px 4px 0 var(--ml-ink); }
+            .ml-Design--bold .ml-Card .t-Login-title { font-weight: 900; letter-spacing: -.035em; }
+            .ml-Page.ml-Design--bold .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) {
+              --a-button-border-color: var(--ml-ink); --a-button-hover-border-color: var(--ml-ink); --a-button-focus-border-color: var(--ml-ink);
+              background-image: none; border: 2px solid var(--ml-ink); box-shadow: 4px 4px 0 var(--ml-ink); font-weight: 800;
+            }
+            .ml-Page.ml-Design--bold .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI):hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ml-ink); filter: none; }
+            .ml-Page.ml-Design--bold .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI):active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ml-ink); }
+            .ml-Design--bold .ml-Cta { border-width: 3px; box-shadow: 4px 4px 0 currentColor; }
+
+            /* Gradient Border: a turning colour ring around the card */
+            .ml-Design--border .ml-Card {
+              border: 2px solid transparent; -webkit-backdrop-filter: none; backdrop-filter: none;
+              background: linear-gradient(var(--ml-surface), var(--ml-surface)) padding-box,
+                          conic-gradient(from var(--ml-angle, 0deg), var(--ml-accent), var(--ml-accent-2), color-mix(in srgb, var(--ml-accent) 25%, transparent), var(--ml-accent)) border-box;
+              box-shadow: 0 0 70px -24px var(--ml-accent), var(--ml-shadow);
+            }
+            .ml-Page.ml-Design--border.ml-Anim--bg .ml-Card { animation: ml-border 6s linear infinite; }
+            .ml-Page.ml-Design--border.ml-Anim--bg.ml-Anim--entrance .ml-Card { animation: ml-rise .7s cubic-bezier(.2, .8, .2, 1) both, ml-border 6s linear infinite; }
+            .ml-Page.ml-Design--border .ml-Card.ml-is-shaking { animation: ml-shake .5s cubic-bezier(.36, .07, .19, .97) both; }
+
+            /* Layered Cards: two coloured cards fanned out behind the form */
+            /* align-content: the grid row hugs the card, so the fanned cards are exactly as tall as the form */
+            body.ml-Design--layered .ml-Center { display: grid; place-items: center; align-content: center; }
+            body.ml-Design--layered .ml-Main { overflow-x: clip; }
+            body.ml-Design--layered .ml-Center > .ml-Card { grid-area: 1 / 1; z-index: 2; }
+            body.ml-Design--layered .ml-Center::before, body.ml-Design--layered .ml-Center::after {
+              content: ""; grid-area: 1 / 1; align-self: stretch; justify-self: center; box-sizing: border-box; width: 100%; max-width: var(--ml-width); border-radius: var(--ml-radius);
+            }
+            body.ml-Design--layered .ml-Center::before { z-index: 0; background: linear-gradient(135deg, var(--ml-accent), color-mix(in srgb, var(--ml-accent) 70%, #000000)); transform: rotate(-7deg) translate(-4%, 3%); }
+            body.ml-Design--layered .ml-Center::after { z-index: 1; background: var(--ml-accent-2); opacity: .85; transform: rotate(4deg) translate(4%, 1%); }
+
+            </style>
+              #THEME_STYLE_CSS#
+              #APPLICATION_CSS#
+              #PAGE_CSS#
+              #FAVICONS#
+              #HEAD#
+              <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+              <meta name="app-version" content="&APP_VERSION!ATTR." />
+              <meta name="app-tenant-id" content="&APP_TENANT_ID!ATTR." />
+              <meta name="app-alias" content="&APP_ALIAS!ATTR." />
+              <meta name="app-page-alias" content="&APP_PAGE_ALIAS!ATTR." />
+            </head>
+            <body class="t-PageBody--login ml-Page no-anim #PAGE_CSS_CLASSES#" #TEXT_DIRECTION# #ONLOAD#>
+            <script>
+            /* Modern Login: runs before the first paint so the chosen look never flickers.
+               - Theme Toggle option: the visitor's own light/dark choice (localStorage "ml-scheme").
+               - Login Designer preview: template options passed in the URL hash (#ml=ml-Layout--splitLeft ...). */
+            window.modernLogin = (function (body) {
+              var LOOK = /^ml-(Design|Layout|Bg|CardStyle|Accent|Scheme|Width|Corners|Header|Anim|Brand|Split|Phone|Fx)-/;
+              function isDark() {
+                return body.classList.contains("ml-Scheme--dark") ||
+                       (body.classList.contains("ml-Scheme--auto") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+              }
+              function applyPreview() {
+                var m = /[#&]ml=([^&]*)/.exec(window.location.hash);
+                if (!m) { return; }
+                Array.prototype.slice.call(body.classList).forEach(function (c) { if (LOOK.test(c)) { body.classList.remove(c); } });
+                decodeURIComponent(m[1]).split(/[\s,]+/).forEach(function (c) { if (LOOK.test(c)) { body.classList.add(c); } });
+              }
+              function applyScheme() {
+                var s = null;
+                if (!body.classList.contains("ml-Fx--themeToggle")) { return; }
+                try { s = window.localStorage.getItem("ml-scheme"); } catch (e) { s = null; }
+                if (s !== "dark" && s !== "light") { return; }
+                body.classList.remove("ml-Scheme--dark", "ml-Scheme--auto");
+                if (s === "dark") { body.classList.add("ml-Scheme--dark"); }
+              }
+              try { applyPreview(); applyScheme(); } catch (e) { /* never block the sign-in page */ }
+              return { isDark: isDark, applyPreview: applyPreview, applyScheme: applyScheme };
+            })(document.body);
+            </script>
+            <noscript class="t-PageBody-noScript">&APP_TEXT$APEX_PAGE_NOSCRIPT.</noscript>
+            #FORM_OPEN#
+            <div class="ml-Bg" aria-hidden="true">
+              <div class="ml-Bg-media">#BACKGROUND_IMAGE#</div>
+              <span class="ml-Bg-blob ml-Bg-blob--1"></span>
+              <span class="ml-Bg-blob ml-Bg-blob--2"></span>
+              <span class="ml-Bg-blob ml-Bg-blob--3"></span>
+            </div>
+            <script>
+            /* Background image: the picture in the Background Image slot is also offered to the designs as
+               --ml-bg-image (Curved Panel, Arc and Wave show it inside their panel). The Login Designer can
+               swap it for one of the application's images: #...&bg=<file path> */
+            (function (body) {
+              try {
+                var media = document.querySelector(".ml-Bg-media"), img = media && media.querySelector("img"),
+                    m = /[#&]bg=([^&]*)/.exec(window.location.hash), src = null;
+                if (m) {
+                  src = decodeURIComponent(m[1]);
+                  if (!/^[\w\-.\/%]+\.(png|jpe?g|webp|svg|avif)$/i.test(src) || /^\/\/|\.\./.test(src)) { src = null; }
+                  else if (img) { img.src = src; }
+                  else { img = new Image(); img.alt = ""; img.src = src; media.appendChild(img); }
+                }
+                if (img) { body.style.setProperty("--ml-bg-image", 'url("' + (src || img.currentSrc || img.src).replace(/["\\()]/g, "") + '")'); }
+              } catch (e) { /* never block the sign-in page */ }
+            })(document.body);
+            </script>
+            <button type="button" class="ml-ThemeToggle" aria-label="Switch between light and dark">
+              <svg class="ml-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+              <svg class="ml-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+            </button>
+            ```
+        body:
+            ```html
+            <style id="ml-css-3">
+            /* Editorial: paper, a serif headline and fine rules */
+            .ml-Design--editorial .ml-Card { border: 1px solid var(--ml-border); }
+            .ml-Design--editorial .ml-Card::before { content: ""; position: absolute; inset: 7px; border: 1px solid var(--ml-border); pointer-events: none; }
+            .ml-Design--editorial .ml-Card .t-Login-title, .ml-Design--editorial .ml-Brand h1, .ml-Design--editorial .ml-Brand h2.ml-Hero-title {
+              font-family: var(--ml-serif); font-style: italic; font-weight: 600; letter-spacing: -.01em;
+            }
+            .ml-Design--editorial .ml-Card .t-Login-title { font-size: clamp(2rem, 1.6rem + 1.2vw, 2.5rem); }
+            .ml-Design--editorial .ml-Card .t-Login-header::after { content: ""; width: 3rem; height: 2px; margin-block-start: 1rem; background: var(--ml-accent); }
+            .ml-Design--editorial .ml-Card .t-Login-logo { background: transparent; background-image: none; box-shadow: none; color: var(--ml-accent); border: 1px solid var(--ml-border); }
+            .ml-Page.ml-Design--editorial .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) {
+              background-image: none; box-shadow: none; text-transform: uppercase; letter-spacing: .16em; font-size: .8125rem;
+            }
+
+            /* Terminal: a console window */
+            .ml-Design--terminal .ml-Card { padding-block-start: 3.5rem; border: 1px solid var(--ml-border); font-family: var(--ml-mono); }
+            .ml-Design--terminal .ml-Card::before { content: ""; position: absolute; top: 1.05rem; inset-inline-start: 1.25rem; width: .7rem; height: .7rem; border-radius: 50%;
+                                                     background: #ff5f56; box-shadow: 1.1rem 0 #ffbd2e, 2.2rem 0 #27c93f; }
+            .ml-Design--terminal .ml-Card::after { content: ""; position: absolute; top: 2.75rem; inset-inline: 0; height: 1px; background: var(--ml-border); }
+            .ml-Design--terminal .ml-Card :is(.t-Login-title, .ml-Lead, .t-Form-label, .apex-item-text, .t-Button, .ml-Card-footer) { font-family: var(--ml-mono); }
+            .ml-Design--terminal .ml-Card .t-Login-header, .ml-Design--terminal .ml-Card-header { align-items: flex-start; text-align: start; }
+            .ml-Design--terminal .ml-Lead { text-align: start; }
+            .ml-Design--terminal .ml-Card .t-Login-title { color: var(--ml-accent); font-size: 1.375rem; font-weight: 700; letter-spacing: 0; }
+            .ml-Design--terminal .ml-Card .t-Login-title::before { content: "> "; }
+            .ml-Design--terminal .ml-Card .t-Login-title::after { content: ""; display: inline-block; width: .55em; height: 1.05em; margin-inline-start: .2em; vertical-align: -.15em;
+                                                                   background: var(--ml-accent); animation: ml-blink 1.1s steps(1) infinite; }
+            .ml-Page.ml-Design--terminal .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) {
+              --a-button-background-color: transparent; --a-button-text-color: var(--ml-accent); --a-button-border-color: var(--ml-accent);
+              --a-button-hover-background-color: var(--ml-accent); --a-button-hover-text-color: var(--ml-on-accent); --a-button-hover-border-color: var(--ml-accent);
+              background-image: none; border: 1px solid var(--ml-accent); box-shadow: 0 0 20px -6px var(--ml-accent); text-transform: uppercase; letter-spacing: .12em;
+            }
+
+            /* motion */
+            @property --ml-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+            @keyframes ml-border { to { --ml-angle: 360deg; } }
+            @keyframes ml-blink { 50% { opacity: 0; } }
+            @keyframes ml-rise { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: none; } }
+            @keyframes ml-drift1 { to { transform: translate3d(8vmax, 6vmax, 0) scale(1.15); } }
+            @keyframes ml-drift2 { to { transform: translate3d(-7vmax, -5vmax, 0) scale(.9); } }
+            @keyframes ml-drift3 { to { transform: translate3d(-6vmax, 7vmax, 0) scale(1.2); } }
+            @keyframes ml-pan { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }
+            @keyframes ml-spin { to { transform: rotate(360deg); } }
+            @keyframes ml-shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(4px); } 30%, 50%, 70% { transform: translateX(-8px); } 40%, 60% { transform: translateX(8px); } }
+            .ml-Anim--entrance .ml-Card { animation: ml-rise .7s cubic-bezier(.2, .8, .2, 1) both; }
+            .ml-Anim--entrance .ml-Brand-inner { animation: ml-rise .9s cubic-bezier(.2, .8, .2, 1) .1s both; }
+            .ml-Anim--bg .ml-Bg-blob--1 { animation: ml-drift1 22s ease-in-out infinite alternate; }
+            .ml-Anim--bg .ml-Bg-blob--2 { animation: ml-drift2 26s ease-in-out infinite alternate; }
+            .ml-Anim--bg .ml-Bg-blob--3 { animation: ml-drift3 18s ease-in-out infinite alternate; }
+            .ml-Anim--bg.ml-Bg--mesh .ml-Bg, .ml-Anim--bg.ml-Bg--gradient .ml-Bg { background-size: 180% 180%; animation: ml-pan 24s ease-in-out infinite alternate; }
+            .ml-Page .ml-Card.ml-is-shaking { animation: ml-shake .5s cubic-bezier(.36, .07, .19, .97) both; }
+            @media (prefers-reduced-motion: reduce) {
+              .ml-Page *, .ml-Page *::before, .ml-Page *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+              .ml-Page .t-Button.is-busy::after { animation-duration: 1.4s !important; animation-iteration-count: infinite !important; }
+            }
+            
+            /* Windows high contrast */
+            @media (forced-colors: active) {
+              .ml-Bg, .ml-Brand::before { display: none; }
+              .ml-Card { border: 1px solid CanvasText; }
+              .ml-Page .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) { background-image: none; }
+            }
+
+            /* built-in artwork backgrounds: drawn in the accent colours, no image file needed */
+            .ml-Bg--waves .ml-Bg-blob, .ml-Bg--topo .ml-Bg-blob, .ml-Bg--peaks .ml-Bg-blob, .ml-Bg--rings .ml-Bg-blob, .ml-Bg--grid .ml-Bg-blob { display: none; }
+            .ml-Bg--waves .ml-Bg, .ml-Bg--peaks .ml-Bg { background: linear-gradient(180deg, var(--ml-bg) 35%, color-mix(in srgb, var(--ml-accent-2) 18%, var(--ml-bg))); }
+            .ml-Bg--waves .ml-Bg::before, .ml-Bg--waves .ml-Bg::after, .ml-Bg--peaks .ml-Bg::before, .ml-Bg--peaks .ml-Bg::after {
+              content: ""; position: absolute; inset: auto 0 0 0; height: 42vh;
+            }
+            .ml-Bg--waves .ml-Bg::before { background: color-mix(in srgb, var(--ml-accent-2) 55%, transparent);
+                                           -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath d='M0 160C160 110 320 90 520 130S880 250 1080 220 1340 120 1440 110V320H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath d='M0 160C160 110 320 90 520 130S880 250 1080 220 1340 120 1440 110V320H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; }
+            .ml-Bg--waves .ml-Bg::after { background: linear-gradient(90deg, var(--ml-accent), color-mix(in srgb, var(--ml-accent) 60%, var(--ml-accent-2)));
+                                          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath d='M0 230C200 180 380 170 600 210S1000 300 1200 260 1380 200 1440 196V320H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath d='M0 230C200 180 380 170 600 210S1000 300 1200 260 1380 200 1440 196V320H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; }
+            .ml-Bg--peaks .ml-Bg::before { height: 46vh; background: color-mix(in srgb, var(--ml-accent-2) 50%, transparent);
+                                           -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0 170L90 120L160 150L250 70L330 135L410 95L500 160L590 60L680 130L770 90L860 150L940 100L1000 125V300H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0 170L90 120L160 150L250 70L330 135L410 95L500 160L590 60L680 130L770 90L860 150L940 100L1000 125V300H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; }
+            .ml-Bg--peaks .ml-Bg::after { height: 34vh; background: linear-gradient(180deg, var(--ml-accent), color-mix(in srgb, var(--ml-accent) 70%, #000000));
+                                          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0 230L120 160L210 215L330 140L450 225L560 170L660 235L780 150L890 210L1000 175V300H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0 230L120 160L210 215L330 140L450 225L560 170L660 235L780 150L890 210L1000 175V300H0Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat; }
+            .ml-Bg--topo .ml-Bg { background: radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--ml-accent) 12%, transparent), transparent 45%), var(--ml-bg); }
+            .ml-Bg--topo .ml-Bg::before { content: ""; position: absolute; inset: 0; background: var(--ml-accent); opacity: .3;
+                                          --ml-topo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900' viewBox='0 0 900 900'%3E%3Cpath fill='none' stroke='black' stroke-width='1.4' d='M214 220C216 224 219 231 217 234S208 241 202 243S191 242 186 242S178 244 173 243S164 241 161 239S157 233 155 230S148 224 146 220S141 209 143 206S152 199 158 197S169 198 174 198S182 196 187 197S196 199 199 201S203 207 205 210S212 216 214 220ZM262 220C266 230 271 245 266 253S241 267 229 270S204 267 194 268S175 272 165 272S143 269 135 265S124 252 118 244S102 230 98 220S89 195 94 187S119 173 131 170S156 173 166 172S185 168 195 168S217 171 225 175S236 188 242 196S258 210 262 220ZM312 220C317 235 321 258 311 271S271 290 253 293S216 289 200 290S172 301 157 301S120 301 106 294S85 272 76 260S52 235 48 220S39 182 49 169S89 150 107 147S144 151 160 150S188 139 203 139S240 139 254 146S275 168 284 180S308 205 312 220ZM360 220C364 241 366 271 352 286S297 309 273 313S227 308 206 312S170 331 148 334S93 336 73 327S43 295 31 278S3 241 0 220S-6 169 8 154S63 131 87 127S133 132 154 128S190 109 212 106S267 104 287 113S317 145 329 162S357 199 360 220ZM404 220C406 246 405 281 386 299S320 325 291 331S238 328 213 335S166 367 137 371S63 376 37 363S-2 319 -15 295S-42 246 -44 220S-45 159 -26 141S40 115 69 109S122 112 147 105S194 73 223 69S297 64 323 77S362 121 375 145S402 194 404 220ZM1304 220C1306 246 1305 281 1286 299S1220 325 1191 331S1138 328 1113 335S1066 367 1037 371S963 376 937 363S898 319 885 295S858 246 856 220S855 159 874 141S940 115 969 109S1022 112 1047 105S1094 73 1123 69S1197 64 1223 77S1262 121 1275 145S1302 194 1304 220ZM404 1120C406 1146 405 1181 386 1199S320 1225 291 1231S238 1228 213 1235S166 1267 137 1271S63 1276 37 1263S-2 1219 -15 1195S-42 1146 -44 1120S-45 1059 -26 1041S40 1015 69 1009S122 1012 147 1005S194 973 223 969S297 964 323 977S362 1021 375 1045S402 1094 404 1120ZM1304 1120C1306 1146 1305 1181 1286 1199S1220 1225 1191 1231S1138 1228 1113 1235S1066 1267 1037 1271S963 1276 937 1263S898 1219 885 1195S858 1146 856 1120S855 1059 874 1041S940 1015 969 1009S1022 1012 1047 1005S1094 973 1123 969S1197 964 1223 977S1262 1021 1275 1045S1302 1094 1304 1120ZM441 220C440 250 438 289 416 311S341 340 308 349S251 351 221 362S162 408 125 414S29 419 -1 402S-45 342 -59 312S-81 250 -81 220S-78 151 -56 129S19 100 52 91S109 89 139 78S198 32 235 26S331 21 361 38S405 98 419 128S441 190 441 220ZM1341 220C1340 250 1338 289 1316 311S1241 340 1208 349S1151 351 1121 362S1062 408 1025 414S929 419 899 402S855 342 841 312S819 250 819 220S822 151 844 129S919 100 952 91S1009 89 1039 78S1098 32 1135 26S1231 21 1261 38S1305 98 1319 128S1341 190 1341 220ZM441 1120C440 1150 438 1189 416 1211S341 1240 308 1249S251 1251 221 1262S162 1308 125 1314S29 1319 -1 1302S-45 1242 -59 1212S-81 1150 -81 1120S-78 1051 -56 1029S19 1000 52 991S109 989 139 978S198 932 235 926S331 921 361 938S405 998 419 1028S441 1090 441 1120ZM1341 1120C1340 1150 1338 1189 1316 1211S1241 1240 1208 1249S1151 1251 1121 1262S1062 1308 1025 1314S929 1319 899 1302S855 1242 841 1212S819 1150 819 1120S822 1051 844 1029S919 1000 952 991S1009 989 1039 978S1098 932 1135 926S1231 921 1261 938S1305 998 1319 1028S1341 1090 1341 1120ZM675 160C674 164 673 168 671 172S664 179 660 180S650 178 645 179S638 183 633 184S622 184 618 182S612 175 609 172S600 164 600 160S606 151 610 148S619 145 623 143S629 137 633 136S642 138 646 139S655 139 660 140S674 143 677 146S676 156 675 160ZM717 160C714 170 712 178 706 186S693 201 684 204S662 201 652 203S634 217 623 218S596 218 587 213S574 197 568 188S549 169 550 160S565 141 574 135S595 129 604 124S616 107 624 105S644 106 655 107S677 108 689 111S721 119 726 127S721 150 717 160ZM755 160C749 175 746 186 738 198S720 222 707 227S676 226 660 231S630 254 612 257S568 256 554 247S536 218 528 203S502 173 505 160S530 132 543 123S573 113 585 104S601 76 614 70S647 70 665 72S702 74 720 80S768 95 774 109S761 145 755 160ZM787 160C778 180 775 193 766 209S748 243 731 252S691 255 669 263S625 297 600 300S538 294 520 281S500 237 491 217S462 178 466 160S498 124 515 112S550 98 564 84S585 40 603 32S652 30 676 33S728 38 752 48S812 73 818 91S796 140 787 160ZM787 1060C778 1080 775 1093 766 1109S748 1143 731 1152S691 1155 669 1163S625 1197 600 1200S538 1194 520 1181S500 1137 491 1117S462 1078 466 1060S498 1024 515 1012S550 998 564 984S585 940 603 932S652 930 676 933S728 938 752 948S812 973 818 991S796 1040 787 1060ZM814 160C803 184 803 200 794 219S778 266 759 279S708 288 680 299S619 342 587 345S509 332 488 313S470 255 461 229S428 181 432 160S469 118 487 101S524 80 541 61S566 0 591 -12S656 -14 688 -9S754 4 782 18S851 53 857 77S824 136 814 160ZM814 1060C803 1084 803 1100 794 1119S778 1166 759 1179S708 1188 680 1199S619 1242 587 1245S509 1232 488 1213S470 1155 461 1129S428 1081 432 1060S469 1018 487 1001S524 980 541 961S566 900 591 888S656 886 688 891S754 904 782 918S851 953 857 977S824 1036 814 1060ZM837 160C826 188 833 206 825 231S813 293 790 311S727 327 691 340S613 390 574 390S482 367 459 342S445 269 436 239S398 185 402 160S438 110 457 89S494 59 514 34S546 -46 577 -60S662 -60 700 -51S777 -28 808 -9S884 36 889 64S848 132 837 160ZM-63 160C-74 188 -67 206 -75 231S-87 293 -110 311S-173 327 -209 340S-287 390 -326 390S-418 367 -441 342S-455 269 -464 239S-502 185 -498 160S-462 110 -443 89S-406 59 -386 34S-354 -46 -323 -60S-238 -60 -200 -51S-123 -28 -92 -9S-16 36 -11 64S-52 132 -63 160ZM837 1060C826 1088 833 1106 825 1131S813 1193 790 1211S727 1227 691 1240S613 1290 574 1290S482 1267 459 1242S445 1169 436 1139S398 1085 402 1060S438 1010 457 989S494 959 514 934S546 854 577 840S662 840 700 849S777 872 808 891S884 936 889 964S848 1032 837 1060ZM-63 1060C-74 1088 -67 1106 -75 1131S-87 1193 -110 1211S-173 1227 -209 1240S-287 1290 -326 1290S-418 1267 -441 1242S-455 1169 -464 1139S-502 1085 -498 1060S-462 1010 -443 989S-406 959 -386 934S-354 854 -323 840S-238 840 -200 849S-123 872 -92 891S-16 936 -11 964S-52 1032 -63 1060ZM504 610C502 614 495 616 492 619S491 626 488 628S481 633 477 634S468 635 463 635S449 638 444 636S438 627 438 622S439 614 440 610S439 602 442 599S451 597 455 594S459 589 463 587S474 580 478 580S488 585 492 588S502 593 504 597S506 606 504 610ZM544 610C540 618 524 622 519 629S519 647 513 653S497 666 487 669S465 671 453 671S420 675 411 669S400 647 399 637S403 619 405 610S402 592 407 586S425 578 433 573S444 559 454 553S479 537 490 538S511 552 520 559S541 573 545 581S548 602 544 610ZM580 610C574 622 553 628 547 640S550 670 541 682S515 704 498 709S462 710 442 709S392 711 379 701S366 666 365 650S373 623 374 610S366 583 372 572S396 558 408 548S427 523 443 514S485 492 503 495S534 520 547 533S575 555 580 567S585 598 580 610ZM614 610C608 626 584 634 578 651S585 697 573 714S534 746 510 752S458 749 431 746S367 743 351 729S338 681 337 661S346 627 345 610S328 572 333 557S363 534 380 519S408 484 431 473S492 446 515 452S555 492 571 509S604 539 611 556S619 594 614 610ZM649 610C645 630 620 642 614 665S624 728 609 750S554 791 523 796S454 786 422 779S345 772 327 754S314 695 312 671S319 632 315 610S284 561 289 540S326 505 347 487S389 442 419 430S498 403 526 413S571 468 590 490S628 525 638 545S653 590 649 610ZM689 610C688 634 664 652 657 682S668 762 648 788S574 835 535 838S452 818 414 807S328 795 307 774S293 707 289 680S288 636 280 610S233 547 239 521S284 474 312 452S370 401 407 389S503 365 536 379S584 449 605 475S649 513 663 536S690 586 689 610ZM849 760C849 763 848 767 846 770S841 775 838 778S833 786 828 789S816 793 811 792S801 785 799 781S796 773 794 770S791 763 791 760S792 753 794 750S799 745 802 742S807 734 812 731S824 727 829 728S839 735 841 739S844 747 846 750S849 757 849 760ZM887 760C888 768 886 777 883 784S872 798 865 805S851 824 840 828S810 836 799 832S779 815 774 806S768 789 765 781S755 768 753 760S754 743 757 736S768 722 775 715S789 696 800 692S830 684 841 688S861 705 866 714S872 731 875 739S885 752 887 760ZM-13 760C-12 768 -14 777 -17 784S-28 798 -35 805S-49 824 -60 828S-90 836 -101 832S-121 815 -126 806S-132 789 -135 781S-145 768 -147 760S-146 743 -143 736S-132 722 -125 715S-111 696 -100 692S-70 684 -59 688S-39 705 -34 714S-28 731 -25 739S-15 752 -13 760ZM926 760C930 772 930 788 925 800S908 824 895 835S869 863 851 869S805 876 789 869S761 841 752 828S744 803 738 792S717 772 714 760S710 732 715 720S732 696 745 685S771 657 789 651S835 644 851 651S879 679 888 692S896 717 902 728S923 748 926 760ZM26 760C30 772 30 788 25 800S8 824 -5 835S-31 863 -49 869S-95 876 -111 869S-139 841 -148 828S-156 803 -162 792S-183 772 -186 760S-190 732 -185 720S-168 696 -155 685S-129 657 -111 651S-65 644 -49 651S-21 679 -12 692S-4 717 2 728S23 748 26 760ZM971 760C978 777 980 801 972 819S945 853 927 867S886 901 862 906S801 912 780 902S746 863 734 846S722 816 711 802S676 777 669 760S660 719 668 701S695 667 713 653S754 619 778 614S839 608 860 618S894 657 906 674S918 704 929 718S964 743 971 760ZM71 760C78 777 80 801 72 819S45 853 27 867S-14 901 -38 906S-99 912 -120 902S-154 863 -166 846S-178 816 -189 802S-224 777 -231 760S-240 719 -232 701S-205 667 -187 653S-146 619 -122 614S-61 608 -40 618S-6 657 6 674S18 704 29 718S64 743 71 760ZM971 -140C978 -123 980 -99 972 -81S945 -47 927 -33S886 1 862 6S801 12 780 2S746 -37 734 -54S722 -84 711 -98S676 -123 669 -140S660 -181 668 -199S695 -233 713 -247S754 -281 778 -286S839 -292 860 -282S894 -243 906 -226S918 -196 929 -182S964 -157 971 -140ZM71 -140C78 -123 80 -99 72 -81S45 -47 27 -33S-14 1 -38 6S-99 12 -120 2S-154 -37 -166 -54S-178 -84 -189 -98S-224 -123 -231 -140S-240 -181 -232 -199S-205 -233 -187 -247S-146 -281 -122 -286S-61 -292 -40 -282S-6 -243 6 -226S18 -196 29 -182S64 -157 71 -140ZM1023 760C1034 782 1035 816 1024 839S984 882 958 899S902 935 871 940S797 942 772 929S733 882 717 863S697 831 680 814S628 782 617 760S605 704 616 681S656 638 682 621S738 585 769 580S843 578 868 591S907 638 923 657S943 689 960 706S1012 738 1023 760ZM123 760C134 782 135 816 124 839S84 882 58 899S2 935 -29 940S-103 942 -128 929S-167 882 -183 863S-203 831 -220 814S-272 782 -283 760S-295 704 -284 681S-244 638 -218 621S-162 585 -131 580S-57 578 -32 591S7 638 23 657S43 689 60 706S112 738 123 760ZM1023 -140C1034 -118 1035 -84 1024 -61S984 -18 958 -1S902 35 871 40S797 42 772 29S733 -18 717 -37S697 -69 680 -86S628 -118 617 -140S605 -196 616 -219S656 -262 682 -279S738 -315 769 -320S843 -322 868 -309S907 -262 923 -243S943 -211 960 -194S1012 -162 1023 -140ZM123 -140C134 -118 135 -84 124 -61S84 -18 58 -1S2 35 -29 40S-103 42 -128 29S-167 -18 -183 -37S-203 -69 -220 -86S-272 -118 -283 -140S-295 -196 -284 -219S-244 -262 -218 -279S-162 -315 -131 -320S-57 -322 -32 -309S7 -262 23 -243S43 -211 60 -194S112 -162 123 -140ZM1082 760C1095 788 1094 832 1079 860S1020 910 987 927S916 963 879 967S795 966 765 952S720 901 700 880S668 848 644 828S572 788 558 760S546 688 561 660S620 610 653 593S724 557 761 553S845 554 875 568S920 619 940 640S972 672 996 692S1068 732 1082 760ZM182 760C195 788 194 832 179 860S120 910 87 927S16 963 -21 967S-105 966 -135 952S-180 901 -200 880S-232 848 -256 828S-328 788 -342 760S-354 688 -339 660S-280 610 -247 593S-176 557 -139 553S-55 554 -25 568S20 619 40 640S72 672 96 692S168 732 182 760ZM1082 -140C1095 -112 1094 -68 1079 -40S1020 10 987 27S916 63 879 67S795 66 765 52S720 1 700 -20S668 -52 644 -72S572 -112 558 -140S546 -212 561 -240S620 -290 653 -307S724 -343 761 -347S845 -346 875 -332S920 -281 940 -260S972 -228 996 -208S1068 -168 1082 -140ZM182 -140C195 -112 194 -68 179 -40S120 10 87 27S16 63 -21 67S-105 66 -135 52S-180 1 -200 -20S-232 -52 -256 -72S-328 -112 -342 -140S-354 -212 -339 -240S-280 -290 -247 -307S-176 -343 -139 -347S-55 -346 -25 -332S20 -281 40 -260S72 -228 96 -208S168 -168 182 -140ZM117 760C119 764 125 769 125 773S118 782 114 784S101 783 96 783S88 782 84 782S74 782 70 781S61 776 58 772S54 764 55 760S58 752 61 749S69 745 73 743S79 739 83 736S94 729 99 729S111 733 113 737S112 747 113 751S115 756 117 760ZM157 760C162 769 175 783 173 792S155 811 143 813S115 809 104 809S86 810 76 810S50 814 40 810S20 797 15 789S11 769 13 760S20 742 26 736S42 725 50 719S63 707 73 702S99 688 110 689S135 702 140 710S138 732 141 740S151 751 157 760ZM202 760C211 774 229 798 223 811S188 837 170 840S127 831 110 831S84 840 67 842S22 850 6 844S-23 819 -28 805S-27 774 -24 760S-14 734 -6 723S11 702 23 693S46 671 63 664S104 648 121 652S155 674 163 687S164 717 170 729S193 746 202 760ZM1102 760C1111 774 1129 798 1123 811S1088 837 1070 840S1027 831 1010 831S984 840 967 842S922 850 906 844S877 819 872 805S873 774 876 760S886 734 894 723S911 702 923 693S946 671 963 664S1004 648 1021 652S1055 674 1063 687S1064 717 1070 729S1093 746 1102 760ZM253 760C265 779 282 813 272 830S218 859 192 862S139 850 116 853S81 873 57 877S-9 889 -30 880S-62 840 -66 820S-58 778 -54 760S-48 726 -41 710S-23 676 -8 662S28 632 51 625S108 612 130 619S172 649 184 666S191 701 202 717S242 741 253 760ZM1153 760C1165 779 1182 813 1172 830S1118 859 1092 862S1039 850 1016 853S981 873 957 877S891 889 870 880S838 840 834 820S842 778 846 760S852 726 859 710S877 676 892 662S928 632 951 625S1008 612 1030 619S1072 649 1084 666S1091 701 1102 717S1142 741 1153 760ZM253 -140C265 -121 282 -87 272 -70S218 -41 192 -38S139 -50 116 -47S81 -27 57 -23S-9 -11 -30 -20S-62 -60 -66 -80S-58 -122 -54 -140S-48 -174 -41 -190S-23 -224 -8 -238S28 -268 51 -275S108 -288 130 -281S172 -251 184 -234S191 -199 202 -183S242 -159 253 -140ZM1153 -140C1165 -121 1182 -87 1172 -70S1118 -41 1092 -38S1039 -50 1016 -47S981 -27 957 -23S891 -11 870 -20S838 -60 834 -80S842 -122 846 -140S852 -174 859 -190S877 -224 892 -238S928 -268 951 -275S1008 -288 1030 -281S1072 -251 1084 -234S1091 -199 1102 -183S1142 -159 1153 -140ZM308 760C321 784 333 827 317 847S243 876 211 881S151 870 123 876S76 912 45 918S-42 931 -66 917S-97 859 -100 833S-84 783 -80 760S-85 717 -79 695S-63 645 -43 627S11 593 41 587S111 582 138 591S187 627 204 645S223 683 241 702S296 736 308 760ZM1208 760C1221 784 1233 827 1217 847S1143 876 1111 881S1051 870 1023 876S976 912 945 918S858 931 834 917S803 859 800 833S816 783 820 760S815 717 821 695S837 645 857 627S911 593 941 587S1011 582 1038 591S1087 627 1104 645S1123 683 1141 702S1196 736 1208 760ZM308 -140C321 -116 333 -73 317 -53S243 -24 211 -19S151 -30 123 -24S76 12 45 18S-42 31 -66 17S-97 -41 -100 -67S-84 -117 -80 -140S-85 -183 -79 -205S-63 -255 -43 -273S11 -307 41 -313S111 -318 138 -309S187 -273 204 -255S223 -217 241 -198S296 -164 308 -140ZM1208 -140C1221 -116 1233 -73 1217 -53S1143 -24 1111 -19S1051 -30 1023 -24S976 12 945 18S858 31 834 17S803 -41 800 -67S816 -117 820 -140S815 -183 821 -205S837 -255 857 -273S911 -307 941 -313S1011 -318 1038 -309S1087 -273 1104 -255S1123 -217 1141 -198S1196 -164 1208 -140ZM364 760C376 790 378 839 355 862S264 890 227 897S163 892 131 903S70 957 32 965S-75 972 -101 952S-125 875 -126 843S-106 788 -106 760S-128 706 -124 678S-106 610 -80 590S-6 557 31 554S112 557 145 569S202 604 226 624S263 662 286 684S353 730 364 760ZM1264 760C1276 790 1278 839 1255 862S1164 890 1127 897S1063 892 1031 903S970 957 932 965S825 972 799 952S775 875 774 843S794 788 794 760S772 706 776 678S794 610 820 590S894 557 931 554S1012 557 1045 569S1102 604 1126 624S1163 662 1186 684S1253 730 1264 760ZM364 -140C376 -110 378 -61 355 -38S264 -10 227 -3S163 -8 131 3S70 57 32 65S-75 72 -101 52S-125 -25 -126 -57S-106 -112 -106 -140S-128 -194 -124 -222S-106 -290 -80 -310S-6 -343 31 -346S112 -343 145 -331S202 -296 226 -276S263 -238 286 -216S353 -170 364 -140ZM1264 -140C1276 -110 1278 -61 1255 -38S1164 -10 1127 -3S1063 -8 1031 3S970 57 932 65S825 72 799 52S775 -25 774 -57S794 -112 794 -140S772 -194 776 -222S794 -290 820 -310S894 -343 931 -346S1012 -343 1045 -331S1102 -296 1126 -276S1163 -238 1186 -216S1253 -170 1264 -140Z'/%3E%3C/svg%3E");
+                                          -webkit-mask: var(--ml-topo) 0 0 / 640px 640px repeat; mask: var(--ml-topo) 0 0 / 640px 640px repeat; }
+            .ml-Scheme--dark.ml-Bg--topo .ml-Bg::before { opacity: .42; background: var(--ml-accent-2); }
+            .ml-Bg--rings .ml-Bg { background: repeating-radial-gradient(circle at 100% 100%, transparent 0 44px, color-mix(in srgb, var(--ml-accent) 22%, transparent) 44px 46px),
+                                               radial-gradient(circle at 0 0, color-mix(in srgb, var(--ml-accent-2) 22%, transparent), transparent 45%), var(--ml-bg); }
+            .ml-Bg--grid .ml-Bg {
+              background: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--ml-accent) 20%, transparent), transparent 70%),
+                          linear-gradient(color-mix(in srgb, var(--ml-text) 7%, transparent) 1px, transparent 1px) 0 0 / 40px 40px,
+                          linear-gradient(90deg, color-mix(in srgb, var(--ml-text) 7%, transparent) 1px, transparent 1px) 0 0 / 40px 40px, var(--ml-bg);
+            }
+
+            </style>
+            <div class="ml-Shell">
+              <div class="ml-TopBar">#REGION_POSITION_05#</div>
+              <aside class="ml-Brand"><div class="ml-Brand-inner">#REGION_POSITION_03#</div></aside>
+              <div class="ml-Main">
+                <div class="ml-Center">
+                  <div class="ml-Card">
+                    <div class="ml-Offline" role="status"><span class="ml-Offline-text">You are offline. Signing in needs a connection.</span></div>
+                    <header class="ml-Card-header">#REGION_POSITION_01#</header>
+                    <main class="ml-Card-body" id="main">#SUCCESS_MESSAGE##NOTIFICATION_MESSAGE##GLOBAL_NOTIFICATION##BODY#</main>
+                    <footer class="ml-Card-footer">#REGION_POSITION_02#</footer>
+                  </div>
+                </div>
+                <div class="ml-PageFooter">#REGION_POSITION_04#</div>
+              </div>
+            </div>
+            ```
+        footer:
+            ```html
+            #FORM_CLOSE#
+            #DEVELOPER_TOOLBAR#
+            #APEX_JAVASCRIPT#
+            #GENERATED_CSS#
+            #THEME_JAVASCRIPT#
+            #TEMPLATE_JAVASCRIPT#
+            #APPLICATION_JAVASCRIPT#
+            #PAGE_JAVASCRIPT#
+            #GENERATED_JAVASCRIPT#
+            </body>
+            </html>
+            ```
+    }
+    javaScript {
+        executeWhenPageLoads:
+            ```javascript-browser
+            apex.theme42.initializePage.appLogin();
+            
+            // Modern Login behaviour. Everything is switched by template options (body classes);
+            // texts come from text messages MODERN_LOGIN.* when the app defines them, else English.
+            (function ($, ml) {
+                var body = document.body,
+                    card = document.querySelector(".ml-Card"),
+                    reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            
+                function has(cls) { return body.classList.contains(cls); }
+                function msg(key, fallback) {
+                    var t = apex.lang.getMessage(key);
+                    return (!t || t === key) ? fallback : t;
+                }
+            
+                // Login Designer preview: follow hash changes without a reload (a new background image needs one)
+                var lastBg = (/[#&]bg=([^&]*)/.exec(window.location.hash) || [])[1];
+                window.addEventListener("hashchange", function () {
+                    var bg = (/[#&]bg=([^&]*)/.exec(window.location.hash) || [])[1];
+                    if (bg !== lastBg) { window.location.reload(); return; }
+                    ml.applyPreview(); ml.applyScheme();
+                });
+            
+                // phone keyboards: no auto-capitalise / auto-correct on user names, "Go" on the password
+                $(".ml-Card input[autocomplete=username], .ml-Card input[type=email]")
+                    .attr({ autocapitalize: "none", autocorrect: "off", spellcheck: "false" });
+                $(".ml-Card input[type=password]").last().attr("enterkeyhint", "go");
+            
+                // Caps Lock hint under password fields
+                var capsText = msg("MODERN_LOGIN.CAPS_LOCK", "Caps Lock is on");
+                $(document).on("keydown keyup", "input[type=password]", function (e) {
+                    var ev = e.originalEvent;
+                    if (!ev || typeof ev.getModifierState !== "function") { return; }
+                    var box = $(this).closest(".t-Form-fieldContainer");
+                    if (!box.find(".ml-capsHint").length) {
+                        $('<div class="ml-capsHint" role="status"><span class="fa fa-arrow-up" aria-hidden="true"></span></div>')
+                            .append(document.createTextNode(" " + capsText))
+                            .appendTo(box.find(".t-Form-inputContainer").first());
+                    }
+                    box.toggleClass("ml-capsOn", ev.getModifierState("CapsLock"));
+                }).on("blur", "input[type=password]", function () {
+                    $(this).closest(".t-Form-fieldContainer").removeClass("ml-capsOn");
+                });
+            
+                // Busy Button on Submit: spinner, no double submits
+                $(document).on("apexpagesubmit", function () {
+                    if (has("ml-Fx--busy")) { $(".ml-Card .t-Button--hot").addClass("is-busy").attr("aria-busy", "true"); }
+                });
+                window.addEventListener("pageshow", function () {
+                    $(".ml-Card .t-Button--hot").removeClass("is-busy").removeAttr("aria-busy");
+                });
+            
+                // Shake on Error: when the page returns with an error, or client-side validation fails
+                var lastShake = 0;
+                function shake() {
+                    if (!card || !has("ml-Fx--shake") || reduceMotion || Date.now() - lastShake < 1500) { return; }
+                    lastShake = Date.now();
+                    card.classList.remove("ml-is-shaking");
+                    void card.offsetWidth;
+                    card.classList.add("ml-is-shaking");
+                }
+                if ($(".ml-Card #t_Alert_Notification, .ml-Card .t-Form-fieldContainer.is-error").length) { shake(); }
+                var errBox = document.getElementById("APEX_ERROR_MESSAGE");
+                if (errBox && window.MutationObserver) {
+                    new MutationObserver(function () {
+                        if (!errBox.classList.contains("u-hidden") && errBox.textContent.trim()) {
+                            shake();
+                            $(".ml-Card .t-Button--hot").removeClass("is-busy").removeAttr("aria-busy");
+                        }
+                    }).observe(errBox, { attributes: true, childList: true, subtree: true });
+                }
+                if (card) { card.addEventListener("animationend", function () { card.classList.remove("ml-is-shaking"); }); }
+            
+                // Connection Status: banner in the card while the device is offline
+                $(".ml-Offline-text").text(msg("MODERN_LOGIN.OFFLINE", "You are offline. Signing in needs a connection."));
+                function net() { body.classList.toggle("ml-is-offline", has("ml-Fx--offline") && navigator.onLine === false); }
+                window.addEventListener("online", net);
+                window.addEventListener("offline", net);
+                net();
+            
+                // Theme Toggle: the visitor's own light / dark choice, remembered on the device
+                $(".ml-ThemeToggle").attr("aria-label", msg("MODERN_LOGIN.THEME", "Switch between light and dark")).on("click", function () {
+                    try { window.localStorage.setItem("ml-scheme", ml.isDark() ? "light" : "dark"); } catch (e) { /* private mode */ }
+                    ml.applyScheme();
+                    this.setAttribute("aria-pressed", ml.isDark() ? "true" : "false");
+                }).attr("aria-pressed", ml.isDark() ? "true" : "false");
+            
+                // Slides: any .ml-Slides block becomes a carousel with dots and swipe; Auto-rotate Slides plays it
+                $(".ml-Slides").each(function () {
+                    var box = this, slides = $(box).children().toArray(), i = 0, timer = null, startX = null;
+                    if (slides.length < 2) { return; }
+                    var dots = $('<div class="ml-Dots" role="tablist"></div>');
+                    function show(n) {
+                        i = (n + slides.length) % slides.length;
+                        slides.forEach(function (s, k) { s.classList.toggle("is-active", k === i); s.setAttribute("aria-hidden", k === i ? "false" : "true"); });
+                        dots.children().each(function (k, d) { d.classList.toggle("is-active", k === i); d.setAttribute("aria-selected", k === i ? "true" : "false"); });
+                    }
+                    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+                    function play() {
+                        stop();
+                        if (has("ml-Fx--slides") && !reduceMotion) {
+                            timer = setInterval(function () { if (!document.hidden) { show(i + 1); } }, 6000);
+                        }
+                    }
+                    slides.forEach(function (s, n) {
+                        $('<button type="button" class="ml-Dot" role="tab"></button>')
+                            .attr("aria-label", (n + 1) + " / " + slides.length)
+                            .on("click", function () { show(n); play(); })
+                            .appendTo(dots);
+                    });
+                    $(box).addClass("is-ready").after(dots)
+                        .on("mouseenter focusin", stop).on("mouseleave focusout", play)
+                        .on("touchstart", function (e) { startX = e.originalEvent.touches[0].clientX; })
+                        .on("touchend", function (e) {
+                            if (startX === null) { return; }
+                            var dx = e.originalEvent.changedTouches[0].clientX - startX;
+                            startX = null;
+                            if (Math.abs(dx) > 40) { show(i + (dx < 0 ? 1 : -1)); play(); }
+                        });
+                    show(0);
+                    play();
+                });
+            })(apex.jQuery, window.modernLogin);
+            ```
+    }
+    css {
+        inline:
+            ```css
+            /* Modern Login page template. Every look is a template option, rendered as a body class ml-*.
+               Nothing has to be added to the page itself.
+               The CSS continues in the <style> blocks of the header and the body (a template field holds at most 32 KB). */
+            .ml-Page {
+              --ml-accent: var(--ut-palette-primary, #2f6f8f);
+              --ml-accent-2: color-mix(in srgb, var(--ml-accent) 55%, #ffffff);
+              --ml-on-accent: #ffffff;
+              --ml-bg: #eef1f5;
+              --ml-surface: #ffffff;
+              --ml-text: #16191d;
+              --ml-muted: #5f6670;
+              --ml-border: rgba(16, 24, 40, .10);
+              --ml-field-bg: #ffffff;
+              --ml-field-border: rgba(16, 24, 40, .18);
+              --ml-on-bg: var(--ml-muted);
+              --ml-on-bg-strong: var(--ml-text);
+              --ml-radius: 20px;
+              --ml-control-radius: 10px;
+              --ml-width: 25rem;
+              --ml-split-form: 40%;
+              --ml-shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 24px 60px -16px rgba(16, 24, 40, .28);
+              /* the coloured panel of Curved Panel / Arc / Wave (an image when Background = Image) */
+              --ml-panel-bg: linear-gradient(150deg, var(--ml-accent), color-mix(in srgb, var(--ml-accent) 72%, #000000));
+            }
+            body.ml-Page { margin: 0; min-height: 100vh; min-height: 100dvh; background: var(--ml-bg); color: var(--ml-text); -webkit-tap-highlight-color: transparent; }
+
+            /* designs: default colours. Accent Color, Color Scheme and Background options still apply on top. */
+            .ml-Design--curve {
+              --ml-accent: #6b1820; --ml-accent-2: #d9b48f;
+              --ml-bg: color-mix(in srgb, var(--ml-accent-2) 30%, #fbf6ef);
+              --ml-surface: color-mix(in srgb, var(--ml-accent-2) 30%, #fffaf3);
+              --ml-field-bg: color-mix(in srgb, var(--ml-accent-2) 52%, #fffaf3);
+              --ml-field-border: transparent;
+              --ml-text: color-mix(in srgb, var(--ml-accent) 82%, #1a0a0a);
+              --ml-muted: color-mix(in srgb, var(--ml-accent) 55%, #6b6b6b);
+              --ml-border: color-mix(in srgb, var(--ml-accent) 16%, transparent);
+              --ml-radius: 30px;
+            }
+            .ml-Design--arc { --ml-accent: #ea580c; --ml-accent-2: #fb923c; --ml-bg: #ffffff; --ml-surface: #ffffff; --ml-field-bg: #f1f2f4; --ml-field-border: transparent; --ml-control-radius: 6px; }
+            .ml-Design--neon { --ml-accent: #45f3ff; --ml-accent-2: #ff2770; --ml-on-accent: #0e1a1d; }
+            .ml-Page.ml-Design--neon {
+              --ml-bg: #23262c; --ml-surface: #2c2f35; --ml-text: #e9edf2; --ml-muted: #a3acb6; --ml-border: rgba(255, 255, 255, .08);
+              --ml-field-bg: #4a4d54; --ml-field-border: transparent; --ml-radius: 40px; --ml-control-radius: 12px;
+              --ml-shadow: 0 30px 60px -20px rgba(0, 0, 0, .7); color-scheme: dark;
+            }
+            .ml-Design--soft {
+              --ml-accent: #5b6cff; --ml-accent-2: #8f7dff; --ml-bg: #e5e9f0; --ml-surface: #e5e9f0; --ml-field-bg: #e5e9f0; --ml-field-border: transparent;
+              --ml-soft-dark: #c3c9d4; --ml-soft-light: #ffffff; --ml-radius: 28px; --ml-control-radius: 14px;
+              --ml-shadow: 14px 14px 30px var(--ml-soft-dark), -14px -14px 30px var(--ml-soft-light);
+            }
+            .ml-Design--line { --ml-bg: #ffffff; --ml-surface: #ffffff; --ml-shadow: none; --ml-control-radius: 0px; --ml-width: 23rem; }
+            .ml-Design--bold {
+              --ml-accent: #ff4f7b; --ml-accent-2: #ffd23f; --ml-on-accent: #111111; --ml-ink: #111111;
+              --ml-bg: #fff2c2; --ml-surface: #ffffff; --ml-field-bg: #ffffff; --ml-field-border: var(--ml-ink);
+              --ml-radius: 14px; --ml-control-radius: 10px; --ml-shadow: 8px 8px 0 var(--ml-ink);
+            }
+            .ml-Design--border { --ml-accent: #8b5cf6; --ml-accent-2: #06b6d4; }
+            .ml-Design--editorial {
+              --ml-accent: #7a1c24; --ml-accent-2: #b08968; --ml-bg: #f2eadb; --ml-surface: #fbf7ef; --ml-text: #2b1b16; --ml-muted: #6f5b51;
+              --ml-border: rgba(43, 27, 22, .18); --ml-field-bg: #fffdf8; --ml-field-border: rgba(43, 27, 22, .3); --ml-radius: 2px; --ml-control-radius: 2px;
+              --ml-shadow: 0 1px 0 rgba(43, 27, 22, .06), 0 30px 60px -30px rgba(43, 27, 22, .35);
+              --ml-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+            }
+            .ml-Design--terminal { --ml-accent: #22c55e; --ml-accent-2: #86efac; --ml-on-accent: #04130a; }
+            .ml-Page.ml-Design--terminal {
+              --ml-bg: #070b08; --ml-surface: #0c120e; --ml-text: color-mix(in srgb, var(--ml-accent) 30%, #eafff0); --ml-muted: color-mix(in srgb, var(--ml-accent) 55%, #7a8a80);
+              --ml-border: color-mix(in srgb, var(--ml-accent) 24%, transparent); --ml-field-bg: #070b08; --ml-field-border: color-mix(in srgb, var(--ml-accent) 38%, transparent);
+              --ml-radius: 8px; --ml-control-radius: 4px; --ml-shadow: 0 30px 80px -24px color-mix(in srgb, var(--ml-accent) 30%, transparent);
+              --ml-mono: "Cascadia Code", "JetBrains Mono", Consolas, "Courier New", monospace; color-scheme: dark;
+            }
+            
+            /* accent colours */
+            .ml-Accent--ocean     { --ml-accent: #0b6e99; --ml-accent-2: #22b8cf; --ml-on-accent: #ffffff; }
+            .ml-Accent--indigo    { --ml-accent: #4f46e5; --ml-accent-2: #8b5cf6; --ml-on-accent: #ffffff; }
+            .ml-Accent--violet    { --ml-accent: #7c3aed; --ml-accent-2: #db2777; --ml-on-accent: #ffffff; }
+            .ml-Accent--emerald   { --ml-accent: #047857; --ml-accent-2: #14b8a6; --ml-on-accent: #ffffff; }
+            .ml-Accent--rose      { --ml-accent: #e11d48; --ml-accent-2: #f97316; --ml-on-accent: #ffffff; }
+            .ml-Accent--amber     { --ml-accent: #b45309; --ml-accent-2: #f59e0b; --ml-on-accent: #ffffff; }
+            .ml-Accent--slate     { --ml-accent: #1e293b; --ml-accent-2: #64748b; --ml-on-accent: #ffffff; }
+            .ml-Accent--wine      { --ml-accent: #6b1820; --ml-accent-2: #d9b48f; --ml-on-accent: #ffffff; }
+            .ml-Accent--tangerine { --ml-accent: #e8590c; --ml-accent-2: #ffb03b; --ml-on-accent: #ffffff; }
+            .ml-Accent--cyan      { --ml-accent: #0e7490; --ml-accent-2: #22d3ee; --ml-on-accent: #ffffff; }
+            
+            /* colour scheme */
+            .ml-Scheme--dark {
+              --ml-bg: #0d1117; --ml-surface: #161b22; --ml-text: #e6edf3; --ml-muted: #9aa4af;
+              --ml-border: rgba(255, 255, 255, .10); --ml-field-bg: #0d1117; --ml-field-border: rgba(255, 255, 255, .16);
+              --ml-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 24px 60px -16px rgba(0, 0, 0, .7);
+              color-scheme: dark;
+            }
+            @media (prefers-color-scheme: dark) {
+              .ml-Scheme--auto {
+                --ml-bg: #0d1117; --ml-surface: #161b22; --ml-text: #e6edf3; --ml-muted: #9aa4af;
+                --ml-border: rgba(255, 255, 255, .10); --ml-field-bg: #0d1117; --ml-field-border: rgba(255, 255, 255, .16);
+                --ml-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 24px 60px -16px rgba(0, 0, 0, .7);
+                color-scheme: dark;
+              }
+            }
+            
+            /* dark versions of the light designs that draw with shadows and ink */
+            .ml-Scheme--dark.ml-Design--soft { --ml-bg: #2a2e35; --ml-surface: #2a2e35; --ml-field-bg: #2a2e35; --ml-soft-dark: #1c1f24; --ml-soft-light: #383d46;
+                                               --ml-shadow: 14px 14px 30px var(--ml-soft-dark), -14px -14px 30px var(--ml-soft-light); }
+            .ml-Scheme--dark.ml-Design--bold { --ml-ink: #f4f4f5; --ml-bg: #18181b; --ml-surface: #27272a; --ml-field-bg: #18181b; --ml-field-border: var(--ml-ink);
+                                               --ml-shadow: 8px 8px 0 var(--ml-ink); }
+            .ml-Scheme--dark.ml-Design--curve { --ml-panel-bg: linear-gradient(150deg, color-mix(in srgb, var(--ml-accent) 70%, #ffffff), var(--ml-accent)); }
+            @media (prefers-color-scheme: dark) {
+              .ml-Scheme--auto.ml-Design--soft { --ml-bg: #2a2e35; --ml-surface: #2a2e35; --ml-field-bg: #2a2e35; --ml-soft-dark: #1c1f24; --ml-soft-light: #383d46;
+                                                 --ml-shadow: 14px 14px 30px var(--ml-soft-dark), -14px -14px 30px var(--ml-soft-light); }
+              .ml-Scheme--auto.ml-Design--bold { --ml-ink: #f4f4f5; --ml-bg: #18181b; --ml-surface: #27272a; --ml-field-bg: #18181b; --ml-field-border: var(--ml-ink);
+                                                 --ml-shadow: 8px 8px 0 var(--ml-ink); }
+            }
+
+            /* size and shape */
+            .ml-Width--compact { --ml-width: 21.5rem; }
+            .ml-Width--wide    { --ml-width: 30rem; }
+            .ml-Corners--sharp { --ml-radius: 6px;  --ml-control-radius: 4px; }
+            .ml-Corners--round { --ml-radius: 28px; --ml-control-radius: 999px; }
+            .ml-Split--half    { --ml-split-form: 50%; }
+            .ml-Split--narrow  { --ml-split-form: 34%; }
+            
+            /* background */
+            .ml-Bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--ml-bg); }
+            .ml-Bg-media { position: absolute; inset: 0; display: none; }
+            .ml-Bg-media > *, .ml-Bg-media .t-ImageRegion, .ml-Bg-media img { display: block; width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 0; object-fit: cover; }
+            .ml-Bg-blob { position: absolute; border-radius: 50%; filter: blur(72px); opacity: .5; will-change: transform; }
+            .ml-Bg-blob--1 { width: 48vmax; height: 48vmax; top: -18vmax; left: -12vmax; background: var(--ml-accent); }
+            .ml-Bg-blob--2 { width: 44vmax; height: 44vmax; bottom: -20vmax; right: -14vmax; background: var(--ml-accent-2); }
+            .ml-Bg-blob--3 { width: 26vmax; height: 26vmax; top: 40%; left: 55%; opacity: .35; background: color-mix(in srgb, var(--ml-accent) 50%, var(--ml-accent-2)); }
+            .ml-Scheme--dark .ml-Bg-blob { opacity: .32; }
+
+            /* design backgrounds (before the Background options, which win when one is chosen) */
+            .ml-Page[class*="ml-Design--"] .ml-Bg-blob { display: none; }
+            .ml-Design--curve .ml-Bg { background: linear-gradient(115deg, color-mix(in srgb, var(--ml-accent) 78%, #000000) 0%, color-mix(in srgb, var(--ml-accent) 42%, var(--ml-bg)) 48%, var(--ml-bg) 100%); }
+            .ml-Design--arc .ml-Bg, .ml-Design--soft .ml-Bg, .ml-Design--line .ml-Bg, .ml-Design--editorial .ml-Bg { background: var(--ml-bg); }
+            .ml-Design--line .ml-Bg::after { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, var(--ml-accent), var(--ml-accent-2)); }
+            .ml-Design--neon .ml-Bg { background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--ml-accent) 9%, var(--ml-bg)), var(--ml-bg) 62%); }
+            .ml-Design--diagonal .ml-Bg { background: linear-gradient(116deg, var(--ml-accent) 0 41%, var(--ml-accent-2) 41% 43.5%, var(--ml-bg) 43.5%); }
+            .ml-Design--wave .ml-Bg { background: var(--ml-bg); }
+            .ml-Design--wave .ml-Bg::before {
+              content: ""; position: absolute; inset: 0 0 auto 0; height: max(46vh, 17rem); background: var(--ml-panel-bg);
+              -webkit-mask: linear-gradient(#000000 0 0) top / 100% calc(100% - 4.9rem) no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 0H1440V44C1320 84 1200 112 1020 108S700 40 520 36 200 96 0 70Z'/%3E%3C/svg%3E") bottom / 100% 5rem no-repeat;
+                      mask: linear-gradient(#000000 0 0) top / 100% calc(100% - 4.9rem) no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 0H1440V44C1320 84 1200 112 1020 108S700 40 520 36 200 96 0 70Z'/%3E%3C/svg%3E") bottom / 100% 5rem no-repeat;
+            }
+            .ml-Design--bold .ml-Bg { background: radial-gradient(color-mix(in srgb, var(--ml-ink) 16%, transparent) 1.5px, transparent 2px) 0 0 / 26px 26px, var(--ml-bg); }
+            .ml-Design--border .ml-Bg {
+              background: radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--ml-accent) 24%, transparent), transparent),
+                          radial-gradient(50% 45% at 50% 100%, color-mix(in srgb, var(--ml-accent-2) 18%, transparent), transparent), var(--ml-bg);
+            }
+            .ml-Design--layered .ml-Bg { background: radial-gradient(circle at 18% 22%, color-mix(in srgb, var(--ml-accent) 16%, transparent), transparent 42%),
+                                                     radial-gradient(circle at 85% 80%, color-mix(in srgb, var(--ml-accent-2) 16%, transparent), transparent 40%), var(--ml-bg); }
+            .ml-Design--terminal .ml-Bg { background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ml-accent) 9%, var(--ml-bg)), var(--ml-bg) 70%); }
+            .ml-Design--terminal .ml-Bg::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 3px); }
+            .ml-Bg--mesh .ml-Bg-blob, .ml-Bg--gradient .ml-Bg-blob, .ml-Bg--dots .ml-Bg-blob,
+            .ml-Bg--image .ml-Bg-blob, .ml-Bg--solid .ml-Bg-blob { display: none; }
+            .ml-Bg--mesh .ml-Bg {
+              background:
+                radial-gradient(at 12% 18%, color-mix(in srgb, var(--ml-accent) 55%, transparent) 0, transparent 50%),
+                radial-gradient(at 88% 12%, color-mix(in srgb, var(--ml-accent-2) 50%, transparent) 0, transparent 50%),
+                radial-gradient(at 80% 88%, color-mix(in srgb, var(--ml-accent) 40%, transparent) 0, transparent 55%),
+                radial-gradient(at 10% 90%, color-mix(in srgb, var(--ml-accent-2) 45%, transparent) 0, transparent 50%),
+                var(--ml-bg);
+            }
+            .ml-Bg--gradient { --ml-on-bg: rgba(255, 255, 255, .86); --ml-on-bg-strong: #ffffff; }
+            .ml-Bg--gradient .ml-Bg { background: linear-gradient(135deg, var(--ml-accent) 0%, color-mix(in srgb, var(--ml-accent) 50%, var(--ml-accent-2)) 55%, var(--ml-accent-2) 100%); }
+            .ml-Bg--gradient .ml-Bg::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, .18), transparent 40%), radial-gradient(circle at 80% 75%, rgba(0, 0, 0, .18), transparent 45%); }
+            .ml-Bg--dots .ml-Bg {
+              background-color: var(--ml-bg);
+              background-image: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--ml-accent) 22%, transparent), transparent 60%),
+                                radial-gradient(color-mix(in srgb, var(--ml-text) 16%, transparent) 1px, transparent 1.5px);
+              background-size: 100% 100%, 22px 22px;
+            }
+            .ml-Bg--image { --ml-on-bg: rgba(255, 255, 255, .86); --ml-on-bg-strong: #ffffff; }
+            .ml-Bg--image .ml-Bg { background: var(--ml-bg-image, linear-gradient(135deg, var(--ml-accent), var(--ml-accent-2))) center / cover no-repeat; }
+            .ml-Bg--image .ml-Bg-media { display: block; }
+            .ml-Bg--image .ml-Bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, color-mix(in srgb, var(--ml-accent) 45%, rgba(0, 0, 0, .25)), rgba(0, 0, 0, .5)); }
+            .ml-Fx--grain .ml-Bg::before {
+              content: ""; position: absolute; inset: 0; z-index: 2; opacity: .22; mix-blend-mode: overlay;
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            }
+
+            /* Background = Image with a panel design: the picture fills the panel, the page keeps the design's colours */
+            .ml-Bg--image { --ml-panel-bg: linear-gradient(160deg, color-mix(in srgb, var(--ml-accent) 62%, transparent), color-mix(in srgb, var(--ml-accent) 40%, rgba(0, 0, 0, .55))),
+                                           var(--ml-bg-image, none) center / cover no-repeat, var(--ml-accent); }
+            .ml-Bg--image:is(.ml-Design--curve, .ml-Design--arc, .ml-Design--wave) .ml-Bg-media,
+            .ml-Bg--image:is(.ml-Design--curve, .ml-Design--arc, .ml-Design--wave) .ml-Bg::after { display: none; }
+            .ml-Bg--image.ml-Design--curve .ml-Bg { background: linear-gradient(115deg, color-mix(in srgb, var(--ml-accent) 30%, var(--ml-bg)), var(--ml-bg)); }
+            .ml-Bg--image:is(.ml-Design--arc, .ml-Design--wave) .ml-Bg { background: var(--ml-bg); }
+            .ml-Page.ml-Bg--image:is(.ml-Design--curve, .ml-Design--arc, .ml-Design--wave) { --ml-on-bg: var(--ml-muted); --ml-on-bg-strong: var(--ml-text); }
+            
+            /* shell: grid areas top bar / brand panel / main column (centred card + page footer) */
+            .ml-Shell { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr;
+                        grid-template-areas: "top" "main"; min-height: 100vh; min-height: 100dvh; }
+            .ml-Brand { grid-area: brand; display: none; position: relative; color: #ffffff; }
+            .ml-Brand-inner { position: relative; z-index: 1; width: 100%; max-width: 34rem; }
+            .ml-Main { grid-area: main; display: grid; grid-template-rows: 1fr auto; justify-items: center; min-width: 0;
+                       padding: 0 1rem calc(1rem + env(safe-area-inset-bottom)); }
+            .ml-TopBar { grid-area: top; position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+                         padding: calc(1rem + env(safe-area-inset-top)) 1.25rem 0; color: var(--ml-on-bg-strong); font-size: .9375rem; }
+            .ml-TopBar:empty { padding: env(safe-area-inset-top) 0 0; }
+            .ml-TopBar a { color: inherit; font-weight: 600; text-decoration: none; }
+            .ml-TopBar a:hover { text-decoration: underline; }
+            .ml-Logo { display: inline-flex; align-items: center; gap: .5rem; font-size: 1.0625rem; font-weight: 700; letter-spacing: -.01em; }
+            .ml-Logo img { height: 2rem; width: auto; }
+            .ml-Center { display: flex; align-items: center; justify-content: center; width: 100%; padding-block: clamp(1.25rem, 5vh, 3rem); }
+            .ml-Card { position: relative; box-sizing: border-box; width: 100%; max-width: var(--ml-width); padding: clamp(1.5rem, 4vw, 2.5rem);
+                       border-radius: var(--ml-radius); background: var(--ml-surface); box-shadow: var(--ml-shadow); color: var(--ml-text); }
+            .ml-Card-header:empty, .ml-Card-footer:empty, .ml-PageFooter:empty { display: none; }
+            .ml-Card-header { margin-block-end: 1rem; color: var(--ml-muted); text-align: center; }
+            .ml-Card-footer { margin-block-start: 1.5rem; padding-block-start: 1.25rem; border-block-start: 1px solid var(--ml-border);
+                              color: var(--ml-muted); font-size: .875rem; text-align: center; }
+            .ml-Card-footer a, .ml-Card-body a { color: var(--ml-accent); font-weight: 600; text-decoration: none; }
+            .ml-Card-footer a:hover, .ml-Card-body a:hover { text-decoration: underline; }
+            .ml-Scheme--dark .ml-Card-footer a, .ml-Scheme--dark .ml-Card-body a { color: var(--ml-accent-2); }
+            .ml-PageFooter { color: var(--ml-on-bg); font-size: .8125rem; text-align: center; }
+            .ml-PageFooter p { margin: 0; }
+            .ml-PageFooter ul { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.25rem; margin: .5rem 0 0; padding: 0; list-style: none; }
+            .ml-PageFooter a { color: inherit; text-decoration: none; }
+            .ml-PageFooter a:hover { text-decoration: underline; }
+            
+            /* card styles */
+            .ml-CardStyle--glass .ml-Card { background: color-mix(in srgb, var(--ml-surface) 66%, transparent);
+                                            -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%);
+                                            border: 1px solid color-mix(in srgb, #ffffff 40%, transparent); }
+            .ml-CardStyle--outline .ml-Card { box-shadow: none; border: 1px solid var(--ml-border); }
+            .ml-CardStyle--plain .ml-Card { background: transparent; box-shadow: none; }
+            
+            /* Universal Theme pieces inside the card: login region, fields, buttons */
+            .ml-Main {
+              --ut-field-label-text-color: var(--ml-text);
+              --ut-field-input-icon-color: var(--ml-muted);
+              --ut-field-fl-label-text-color: var(--ml-muted);
+              --a-field-input-background-color: var(--ml-field-bg);
+              --a-field-input-border-color: var(--ml-field-border);
+              --a-field-input-text-color: var(--ml-text);
+              --a-field-input-focus-border-color: var(--ml-accent);
+              --a-field-input-border-radius: var(--ml-control-radius);
+              --a-checkbox-background-color: var(--ml-field-bg);
+              --a-checkbox-border-color: var(--ml-field-border);
+              --a-checkbox-checked-background-color: var(--ml-accent);
+              --a-checkbox-checked-text-color: #ffffff;
+              --a-checkbox-text-color: var(--ml-text);
+              --a-button-border-radius: var(--ml-control-radius);
+            }
+            .ml-Card .t-Login-region {
+              --ut-login-region-background-color: transparent; --ut-login-region-border-width: 0; --ut-login-region-box-shadow: none;
+              --ut-login-region-padding: 0; --ut-login-region-max-width: 100%; --ut-login-region-filter: none;
+              width: 100%; animation: none; color: inherit;
+            }
+            .ml-Card .t-Login-header { display: flex; flex-direction: column; align-items: center; padding: 0 0 1.5rem; text-align: center; }
+            .ml-Page.ml-Header--start .ml-Card .t-Login-header, .ml-Page.ml-Header--start .ml-Card-header, .ml-Page.ml-Header--start .ml-Lead { align-items: flex-start; text-align: start; }
+            .ml-Card .t-Login-logo {
+              --ut-login-logo-size: 3.5rem; --ut-login-logo-font-size: 1.5rem; --ut-login-logo-border-radius: calc(var(--ml-control-radius) + 6px);
+              margin: 0 0 1.25rem; color: var(--ml-on-accent);
+              background-color: var(--ml-accent); background-image: linear-gradient(135deg, var(--ml-accent), var(--ml-accent-2));
+              box-shadow: 0 12px 28px -12px var(--ml-accent);
+            }
+            .ml-Corners--round .ml-Card .t-Login-logo { --ut-login-logo-border-radius: 50%; }
+            .ml-Card img.t-Login-logo { width: auto; max-width: 12rem; height: 3.5rem; background: none; box-shadow: none; border-radius: 0; object-fit: contain; }
+            .ml-Card .t-Login-title { margin: 0; color: var(--ml-text); font-size: clamp(1.5rem, 1.25rem + 1vw, 1.875rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.2; text-align: inherit; }
+            .ml-Page .ml-Lead { display: block; margin: -.75rem 0 1.5rem; color: var(--ml-muted); font-size: .9375rem; line-height: 1.5; text-align: center; }
+            .ml-Card .t-Login-body { --a-field-input-padding-x: .75rem; }
+            .ml-Card .apex-item-text, .ml-Card .apex-item-select { min-height: 2.875rem; font-size: max(16px, 1rem); transition: border-color .15s ease, box-shadow .15s ease; }
+            .ml-Card .apex-item-text:focus, .ml-Card .apex-item-select:focus {
+              border-color: var(--ml-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ml-accent) 20%, transparent); outline: none;
+            }
+            .ml-Card .t-Button--passwordVisibility {
+              --a-button-background-color: var(--ml-field-bg); --a-button-border-color: var(--ml-field-border); --a-button-text-color: var(--ml-muted);
+              --a-button-hover-background-color: color-mix(in srgb, var(--ml-text) 6%, var(--ml-field-bg)); --a-button-hover-text-color: var(--ml-text);
+              --a-button-hover-border-color: var(--ml-field-border);
+              min-width: 2.875rem; border: 1px solid var(--ml-field-border); border-inline-start: 0;
+            }
+            .ml-Card .t-Login-buttons { margin-block-start: .5rem; --a-button-padding-y: .9375rem; }
+            .ml-Card .t-Login-links:not(:empty) { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin-block-start: .75rem; font-size: .875rem; }
+            .ml-Page .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI) {
+              --a-button-background-color: var(--ml-accent);
+              --a-button-text-color: var(--ml-on-accent);
+              --a-button-border-color: transparent;
+              --a-button-hover-background-color: color-mix(in srgb, var(--ml-accent) 88%, #000000);
+              --a-button-hover-text-color: var(--ml-on-accent);
+              --a-button-hover-border-color: transparent;
+              --a-button-active-background-color: color-mix(in srgb, var(--ml-accent) 78%, #000000);
+              --a-button-active-text-color: var(--ml-on-accent);
+              --a-button-focus-background-color: color-mix(in srgb, var(--ml-accent) 88%, #000000);
+              --a-button-focus-text-color: var(--ml-on-accent);
+              --a-button-focus-border-color: transparent;
+              min-height: 2.875rem;
+              background-image: linear-gradient(135deg, var(--ml-accent), color-mix(in srgb, var(--ml-accent) 62%, var(--ml-accent-2)));
+              box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--ml-accent) 75%, transparent);
+              transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+            }
+            .ml-Page .t-Button--hot:not(.t-Button--simple):not(.t-Button--link):not(.t-Button--noUI):hover { transform: translateY(-1px); filter: brightness(1.06); }
+            .ml-Card .t-Body-alert { max-width: none; margin: 0 0 1rem; }
+            .ml-Card .t-Alert--page { border-radius: var(--ml-control-radius); }
+            .ml-capsHint { display: none; align-items: center; gap: .375rem; margin-block-start: .375rem; color: #b45309; font-size: .75rem; font-weight: 600; }
+            .ml-Scheme--dark .ml-capsHint { color: #fbbf24; }
+            .ml-capsOn .ml-capsHint { display: flex; }
+            
+            /* busy button */
+            .ml-Page .t-Button.is-busy { position: relative; pointer-events: none; color: transparent !important; }
+            .ml-Page .t-Button.is-busy .t-Icon { visibility: hidden; }
+            .ml-Page .t-Button.is-busy::after {
+              content: ""; position: absolute; inset: 0; width: 1.25rem; height: 1.25rem; margin: auto; border-radius: 50%;
+              border: 2px solid rgba(255, 255, 255, .45); border-top-color: #ffffff; animation: ml-spin .7s linear infinite;
+            }
+            
+            /* offline banner */
+            .ml-Offline { display: none; align-items: center; gap: .625rem; margin: 0 0 1rem; padding: .625rem .875rem; border-radius: var(--ml-control-radius);
+                          background: color-mix(in srgb, #f59e0b 16%, var(--ml-surface)); color: var(--ml-text); font-size: .875rem; font-weight: 600; }
+            .ml-Offline::before { content: ""; flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 0 4px color-mix(in srgb, #f59e0b 25%, transparent); }
+            .ml-is-offline .ml-Offline { display: flex; }
+            .ml-is-offline .ml-Card .t-Button--hot { opacity: .6; }
+            
+            /* theme toggle */
+            .ml-ThemeToggle { display: none; position: fixed; z-index: 5; top: calc(.75rem + env(safe-area-inset-top)); inset-inline-end: .75rem;
+                              width: 2.75rem; height: 2.75rem; padding: 0; place-items: center; cursor: pointer; border-radius: 999px;
+                              border: 1px solid var(--ml-border); background: color-mix(in srgb, var(--ml-surface) 82%, transparent); color: var(--ml-text);
+                              -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 4px 14px -6px rgba(0, 0, 0, .3); }
+            .ml-ThemeToggle svg { width: 1.25rem; height: 1.25rem; }
+            .ml-ThemeToggle .ml-icon-sun, .ml-Scheme--dark .ml-ThemeToggle .ml-icon-moon { display: none; }
+            .ml-Scheme--dark .ml-ThemeToggle .ml-icon-sun { display: block; }
+            @media (prefers-color-scheme: dark) {
+              .ml-Scheme--auto .ml-ThemeToggle .ml-icon-moon { display: none; }
+              .ml-Scheme--auto .ml-ThemeToggle .ml-icon-sun { display: block; }
+            }
+            .ml-Fx--themeToggle .ml-ThemeToggle { display: grid; }
+            .ml-Fx--themeToggle .ml-TopBar { padding-inline-end: 3.5rem; }
+            
+            /* brand panel */
+            .ml-Brand h1, .ml-Brand h2.ml-Hero-title { margin: 0 0 1rem; color: inherit; font-size: clamp(2rem, 1.2rem + 2.4vw, 3.25rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.08; }
+            .ml-Brand p { margin: 0 0 1.5rem; font-size: 1.0625rem; line-height: 1.6; opacity: .88; }
+            .ml-Brand ul { display: grid; gap: .875rem; margin: 0; padding: 0; list-style: none; }
+            .ml-Brand li { display: flex; align-items: flex-start; gap: .75rem; line-height: 1.45; }
+            .ml-Brand li::before { content: "\2713"; flex: none; display: grid; place-items: center; width: 1.375rem; height: 1.375rem; margin-block-start: .05rem;
+                                   border-radius: 50%; background: color-mix(in srgb, currentColor 18%, transparent); font-size: .75rem; font-weight: 700; }
+            .ml-Brand blockquote { margin: 2.5rem 0 0; padding: 1.25rem 1.5rem; border-radius: var(--ml-radius); background: color-mix(in srgb, currentColor 10%, transparent);
+                                   font-size: .975rem; line-height: 1.55; }
+            .ml-Brand cite { display: block; margin-block-start: .75rem; font-size: .875rem; font-style: normal; font-weight: 600; opacity: .8; }
+            .ml-Badge { display: inline-flex; align-items: center; gap: .5rem; margin-block-end: 1.5rem; padding: .375rem .875rem; border-radius: 999px;
+                        border: 1px solid color-mix(in srgb, currentColor 24%, transparent); background: color-mix(in srgb, currentColor 12%, transparent);
+                        font-size: .8125rem; font-weight: 600; }
+            .ml-Brand .t-Region, .ml-Brand .t-Region-body { background: transparent; border: 0; box-shadow: none; color: inherit; }
+            
+            ```
+    }
+    subtemplate {
+        successMessage:
+            ```html
+            <div class="t-Body-alert">
+              <div class="t-Alert t-Alert--defaultIcons t-Alert--success t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Success" role="region" aria-labelledby="page_success_id">
+                <div class="t-Alert-wrap">
+                  <div class="t-Alert-icon">
+                    <span class="t-Icon" role="img" aria-label="&"APP_TEXT$APEX.SUCCESS"!ATTR."></span>
+                  </div>
+                  <div class="t-Alert-content">
+                    <div class="t-Alert-header">
+                      <h2 id="page_success_id" class="u-vh">#SUCCESS_MESSAGE_HEADING#</h2>
+                    </div>
+                    <div class="t-Alert-title" role="alert">#SUCCESS_MESSAGE#</div>
+                  </div>
+                  <div class="t-Alert-buttons">
+                    <button class="t-Button t-Button--noUI t-Button--icon t-Button--closeAlert" type="button" aria-label="#CLOSE_NOTIFICATION#" title="#CLOSE_NOTIFICATION#"><span class="t-Icon icon-close"></span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            ```
+        notification:
+            ```html
+            <div class="t-Body-alert">
+              <div class="t-Alert t-Alert--defaultIcons t-Alert--warning t-Alert--horizontal t-Alert--page t-Alert--colorBG" id="t_Alert_Notification" role="region" aria-labelledby="page_warning_id">
+                <div class="t-Alert-wrap">
+                  <div class="t-Alert-icon">
+                    <span class="t-Icon" role="img" aria-label="&"APP_TEXT$WARNING"!ATTR."></span>
+                  </div>
+                  <div class="t-Alert-content">
+                    <div class="t-Alert-header">
+                      <h2 id="page_warning_id" class="u-vh">#ERROR_MESSAGE_HEADING#</h2>
+                    </div>
+                    <div class="t-Alert-body" role="alert">#MESSAGE#</div>
+                  </div>
+                  <div class="t-Alert-buttons">
+                    <button class="t-Button t-Button--noUI t-Button--icon t-Button--closeAlert" type="button" aria-label="#CLOSE_NOTIFICATION#" title="#CLOSE_NOTIFICATION#"><span class="t-Icon icon-close"></span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            ```
+    }
+    layout {
+        maxColumns: 12
+        alwaysUseMaxColumns: true
+        defaultLabelColumnSpan: 2
+        firstColumnAttributes: col-start
+        lastColumnAttributes: col-end
+        containerTemplate:
+            ```html
+            <div class="container">
+            #ROWS#
+            </div>
+            ```
+        rowTemplate:
+            ```html
+            <div class="row #CSS_CLASSES#">
+            #COLUMNS#
+            </div>
+            ```
+        columnTemplate: <div class="col col-#COLUMN_SPAN_NUMBER# #CSS_CLASSES# #FIRST_LAST_COLUMN_ATTRIBUTES#" #ATTRIBUTES#>#CONTENT#</div>
+    }
+    errorPage {
+        template:
+            ```html
+            <div class="t-Alert t-Alert--danger t-Alert--wizard t-Alert--defaultIcons">
+              <div class="t-Alert-wrap">
+                <div class="t-Alert-icon">
+                  <span class="t-Icon" role="img" aria-label="&"APP_TEXT$WARNING"!ATTR."></span>
+                </div>
+                <div class="t-Alert-content">
+                  <div class="t-Alert-body">
+                    <h1 class="t-Alert-errorTitle">#MESSAGE#</h1>
+                    <p>#ADDITIONAL_INFO#</p>
+                    <div class="t-Alert-inset">#TECHNICAL_INFO#</div>
+                  </div>
+                </div>
+                <div class="t-Alert-buttons">
+                  <button class="a-Error-back t-Button t-Button--hot w50p t-Button--large" type="button">#OK#</button>
+                </div>
+              </div>
+            </div>
+            ```
+    }
+    comments {
+        comments: Modern sign-in page (Login Studio) - a complete template, nothing to add on the page (no page JavaScript or CSS). Looks and behaviour are template options - Design (Classic, Curved Panel, Arc, Neon, Soft UI, Minimal Line, Diagonal, Wave, Bold, Gradient Border, Layered Cards, Editorial, Terminal), Layout, Background (incl. built-in artwork and your own image), Card Style, Accent Color, Color Scheme and more. Slots - Content Body (login region), Body Header / Body Footer (inside the card), Top Bar (logo and links above the form), Brand Panel (next to the form in Split / Floating layouts and the panel designs; banner on phones), Page Footer (under the card), Background Image (an image region or img - also used by the panel designs). Content helper classes - ml-Lead, ml-Badge, ml-Logo, ml-Hero-title, ml-Cta (call-to-action link in the Brand Panel), ml-Slides (each child is a slide). Optional text messages - MODERN_LOGIN.CAPS_LOCK, MODERN_LOGIN.OFFLINE, MODERN_LOGIN.THEME.
+    }
+
+    templateOption anim-bg (
+        name: Animated Background
+        sequence: 110
+        appearance {
+            cssClasses: ml-Anim--bg
+        }
+    )
+
+    templateOption anim-entrance (
+        name: Entrance Animation
+        sequence: 100
+        appearance {
+            cssClasses: ml-Anim--entrance
+        }
+    )
+
+    templateOption brand-hide-mobile (
+        name: Hide Brand Panel on Phones
+        sequence: 180
+        appearance {
+            cssClasses: ml-Brand-hideMobile
+        }
+        advanced {
+            isAdvancedOption: true
+        }
+    )
+
+    templateOption fx-busy (
+        name: Busy Button on Submit
+        sequence: 130
+        appearance {
+            cssClasses: ml-Fx--busy
+        }
+        help {
+            helpText: The Sign In button shows a spinner while the page submits, so it cannot be pressed twice.
+        }
+    )
+
+    templateOption fx-grain (
+        name: Grain Texture
+        sequence: 120
+        appearance {
+            cssClasses: ml-Fx--grain
+        }
+    )
+
+    templateOption fx-offline (
+        name: Connection Status
+        sequence: 150
+        appearance {
+            cssClasses: ml-Fx--offline
+        }
+        help {
+            helpText: Shows a banner in the card while the device has no connection.
+        }
+    )
+
+    templateOption fx-shake (
+        name: Shake on Error
+        sequence: 140
+        appearance {
+            cssClasses: ml-Fx--shake
+        }
+    )
+
+    templateOption fx-slides (
+        name: Auto-rotate Slides
+        sequence: 170
+        appearance {
+            cssClasses: ml-Fx--slides
+        }
+        help {
+            helpText: Content marked with the ml-Slides class (each child is a slide) rotates every 6 seconds. Dots and swipe always work.
+        }
+    )
+
+    templateOption fx-theme-toggle (
+        name: Theme Toggle Button
+        sequence: 160
+        appearance {
+            cssClasses: ml-Fx--themeToggle
+        }
+        help {
+            helpText: A light / dark switch in the top corner. The visitor's choice is remembered on the device and wins over Color Scheme.
+        }
+    )
+
+    templateOption accent-amber (
+        name: Amber
+        group: @page/ml-accent
+        sequence: 60
+        appearance {
+            cssClasses: ml-Accent--amber
+        }
+    )
+
+    templateOption accent-emerald (
+        name: Emerald
+        group: @page/ml-accent
+        sequence: 40
+        appearance {
+            cssClasses: ml-Accent--emerald
+        }
+    )
+
+    templateOption accent-indigo (
+        name: Indigo
+        group: @page/ml-accent
+        sequence: 20
+        appearance {
+            cssClasses: ml-Accent--indigo
+        }
+    )
+
+    templateOption accent-ocean (
+        name: Ocean
+        group: @page/ml-accent
+        sequence: 10
+        appearance {
+            cssClasses: ml-Accent--ocean
+        }
+    )
+
+    templateOption accent-rose (
+        name: Rose
+        group: @page/ml-accent
+        sequence: 50
+        appearance {
+            cssClasses: ml-Accent--rose
+        }
+    )
+
+    templateOption accent-slate (
+        name: Slate
+        group: @page/ml-accent
+        sequence: 70
+        appearance {
+            cssClasses: ml-Accent--slate
+        }
+    )
+
+    templateOption accent-violet (
+        name: Violet
+        group: @page/ml-accent
+        sequence: 30
+        appearance {
+            cssClasses: ml-Accent--violet
+        }
+    )
+
+    templateOption accent-wine (
+        name: Wine
+        group: @page/ml-accent
+        sequence: 75
+        appearance {
+            cssClasses: ml-Accent--wine
+        }
+    )
+
+    templateOption accent-tangerine (
+        name: Tangerine
+        group: @page/ml-accent
+        sequence: 80
+        appearance {
+            cssClasses: ml-Accent--tangerine
+        }
+    )
+
+    templateOption accent-cyan (
+        name: Cyan
+        group: @page/ml-accent
+        sequence: 85
+        appearance {
+            cssClasses: ml-Accent--cyan
+        }
+    )
+
+    templateOption bg-waves (
+        name: Waves
+        group: @page/ml-background
+        sequence: 60
+        appearance {
+            cssClasses: ml-Bg--waves
+        }
+    )
+
+    templateOption bg-topo (
+        name: Topography
+        group: @page/ml-background
+        sequence: 70
+        appearance {
+            cssClasses: ml-Bg--topo
+        }
+    )
+
+    templateOption bg-peaks (
+        name: Peaks
+        group: @page/ml-background
+        sequence: 80
+        appearance {
+            cssClasses: ml-Bg--peaks
+        }
+    )
+
+    templateOption bg-rings (
+        name: Rings
+        group: @page/ml-background
+        sequence: 90
+        appearance {
+            cssClasses: ml-Bg--rings
+        }
+    )
+
+    templateOption bg-grid (
+        name: Grid Lines
+        group: @page/ml-background
+        sequence: 100
+        appearance {
+            cssClasses: ml-Bg--grid
+        }
+    )
+
+    templateOption design-curve (
+        name: Curved Panel
+        group: @page/ml-design
+        sequence: 10
+        appearance {
+            cssClasses: ml-Design--curve
+        }
+        help {
+            helpText: One card - a coloured panel with a big curve (the Brand Panel slot, e.g. a welcome text and a Register link) next to the form. Has its own layout; with Background = Image the picture fills the panel.
+        }
+    )
+
+    templateOption design-arc (
+        name: Arc
+        group: @page/ml-design
+        sequence: 20
+        appearance {
+            cssClasses: ml-Design--arc
+        }
+        help {
+            helpText: A big coloured circle sweeps in from the side holding the Brand Panel; the form sits on white. Has its own layout; with Background = Image the picture fills the circle.
+        }
+    )
+
+    templateOption design-neon (
+        name: Neon
+        group: @page/ml-design
+        sequence: 30
+        appearance {
+            cssClasses: ml-Design--neon
+        }
+        help {
+            helpText: A dark card with glowing corner lines and a glowing button. Always dark.
+        }
+    )
+
+    templateOption design-soft (
+        name: Soft UI
+        group: @page/ml-design
+        sequence: 40
+        appearance {
+            cssClasses: ml-Design--soft
+        }
+        help {
+            helpText: Neumorphic - the card is raised from the page and the fields are pressed in. Light or dark.
+        }
+    )
+
+    templateOption design-line (
+        name: Minimal Line
+        group: @page/ml-design
+        sequence: 50
+        appearance {
+            cssClasses: ml-Design--line
+        }
+        help {
+            helpText: No card - a large title and underlined fields on a plain page.
+        }
+    )
+
+    templateOption design-diagonal (
+        name: Diagonal
+        group: @page/ml-design
+        sequence: 60
+        appearance {
+            cssClasses: ml-Design--diagonal
+        }
+    )
+
+    templateOption design-wave (
+        name: Wave
+        group: @page/ml-design
+        sequence: 70
+        appearance {
+            cssClasses: ml-Design--wave
+        }
+        help {
+            helpText: A coloured band with a wave edge across the top; the card overlaps it. With Background = Image the picture fills the band.
+        }
+    )
+
+    templateOption design-bold (
+        name: Bold
+        group: @page/ml-design
+        sequence: 80
+        appearance {
+            cssClasses: ml-Design--bold
+        }
+        help {
+            helpText: Neo-brutalist - thick ink outlines, hard offset shadows and a punchy colour.
+        }
+    )
+
+    templateOption design-border (
+        name: Gradient Border
+        group: @page/ml-design
+        sequence: 90
+        appearance {
+            cssClasses: ml-Design--border
+        }
+        help {
+            helpText: A colour ring around the card that turns slowly when Animated Background is on. Best with Color Scheme = Dark.
+        }
+    )
+
+    templateOption design-layered (
+        name: Layered Cards
+        group: @page/ml-design
+        sequence: 100
+        appearance {
+            cssClasses: ml-Design--layered
+        }
+    )
+
+    templateOption design-editorial (
+        name: Editorial
+        group: @page/ml-design
+        sequence: 110
+        appearance {
+            cssClasses: ml-Design--editorial
+        }
+        help {
+            helpText: Paper colours, a serif headline and fine double rules.
+        }
+    )
+
+    templateOption design-terminal (
+        name: Terminal
+        group: @page/ml-design
+        sequence: 120
+        appearance {
+            cssClasses: ml-Design--terminal
+        }
+        help {
+            helpText: A console window - monospaced text, a blinking cursor and scan lines. Always dark.
+        }
+    )
+
+    templateOption bg-dots (
+        name: Dot Grid
+        group: @page/ml-background
+        sequence: 30
+        appearance {
+            cssClasses: ml-Bg--dots
+        }
+    )
+
+    templateOption bg-gradient (
+        name: Bold Gradient
+        group: @page/ml-background
+        sequence: 20
+        appearance {
+            cssClasses: ml-Bg--gradient
+        }
+    )
+
+    templateOption bg-image (
+        name: Image
+        group: @page/ml-background
+        sequence: 40
+        appearance {
+            cssClasses: ml-Bg--image
+        }
+        help {
+            helpText: Put an Image region (or any region with an img) in the Background Image slot, or set the CSS variable --ml-bg-image in the theme style.
+        }
+    )
+
+    templateOption bg-mesh (
+        name: Mesh Gradient
+        group: @page/ml-background
+        sequence: 10
+        appearance {
+            cssClasses: ml-Bg--mesh
+        }
+    )
+
+    templateOption bg-solid (
+        name: Solid
+        group: @page/ml-background
+        sequence: 50
+        appearance {
+            cssClasses: ml-Bg--solid
+        }
+    )
+
+    templateOption card-glass (
+        name: Frosted Glass
+        group: @page/ml-card-style
+        sequence: 10
+        appearance {
+            cssClasses: ml-CardStyle--glass
+        }
+    )
+
+    templateOption card-outline (
+        name: Outlined
+        group: @page/ml-card-style
+        sequence: 20
+        appearance {
+            cssClasses: ml-CardStyle--outline
+        }
+    )
+
+    templateOption card-plain (
+        name: Borderless
+        group: @page/ml-card-style
+        sequence: 30
+        appearance {
+            cssClasses: ml-CardStyle--plain
+        }
+    )
+
+    templateOption corners-round (
+        name: Extra Round
+        group: @page/ml-corners
+        sequence: 20
+        appearance {
+            cssClasses: ml-Corners--round
+        }
+        advanced {
+            isAdvancedOption: true
+        }
+    )
+
+    templateOption corners-sharp (
+        name: Sharp
+        group: @page/ml-corners
+        sequence: 10
+        appearance {
+            cssClasses: ml-Corners--sharp
+        }
+        advanced {
+            isAdvancedOption: true
+        }
+    )
+
+    templateOption header-start (
+        name: Start
+        group: @page/ml-header-align
+        sequence: 10
+        appearance {
+            cssClasses: ml-Header--start
+        }
+        advanced {
+            isAdvancedOption: true
+        }
+    )
+
+    templateOption layout-floating (
+        name: Floating Panel - Right
+        group: @page/ml-layout
+        sequence: 30
+        appearance {
+            cssClasses: ml-Layout--floating
+        }
+    )
+
+    templateOption layout-floating-left (
+        name: Floating Panel - Left
+        group: @page/ml-layout
+        sequence: 40
+        appearance {
+            cssClasses: ml-Layout--floatingLeft
+        }
+    )
+
+    templateOption layout-split-left (
+        name: Split - Form on Left
+        group: @page/ml-layout
+        sequence: 20
+        appearance {
+            cssClasses: ml-Layout--splitLeft
+        }
+    )
+
+    templateOption layout-split-right (
+        name: Split - Form on Right
+        group: @page/ml-layout
+        sequence: 10
+        appearance {
+            cssClasses: ml-Layout--splitRight
+        }
+    )
+
+    templateOption phone-edge (
+        name: Edge to Edge
+        group: @page/ml-phone
+        sequence: 10
+        appearance {
+            cssClasses: ml-Phone--edge
+        }
+        help {
+            helpText: On phones the card fills the whole screen, like a native app sign-in screen.
+        }
+    )
+
+    templateOption scheme-auto (
+        name: Follow Device Setting
+        group: @page/ml-scheme
+        sequence: 20
+        appearance {
+            cssClasses: ml-Scheme--auto
+        }
+    )
+
+    templateOption scheme-dark (
+        name: Dark
+        group: @page/ml-scheme
+        sequence: 10
+        appearance {
+            cssClasses: ml-Scheme--dark
+        }
+    )
+
+    templateOption split-half (
+        name: Half and Half
+        group: @page/ml-split
+        sequence: 10
+        appearance {
+            cssClasses: ml-Split--half
+        }
+    )
+
+    templateOption split-narrow (
+        name: Narrow Form
+        group: @page/ml-split
+        sequence: 20
+        appearance {
+            cssClasses: ml-Split--narrow
+        }
+    )
+
+    templateOption width-compact (
+        name: Compact
+        group: @page/ml-width
+        sequence: 10
+        appearance {
+            cssClasses: ml-Width--compact
+        }
+        advanced {
+            isAdvancedOption: true
+        }
+    )
+
+    templateOption width-wide (
+        name: Wide
+        group: @page/ml-width
+        sequence: 20
+        appearance {
+            cssClasses: ml-Width--wide
+        }
+        advanced {
+            isAdvancedOption: true
+        }
+    )
+
+    slot backgroundImage (
+        name: Background Image
+        staticId: BACKGROUND_IMAGE
+        gridLayout {
+            gridSupport: false
+            newRow: false
+        }
+    )
+
+    slot bodyFooter (
+        name: Body Footer
+        staticId: REGION_POSITION_02
+        gridLayout {
+            gridSupport: false
+        }
+    )
+
+    slot bodyHeader (
+        name: Body Header
+        staticId: REGION_POSITION_01
+        gridLayout {
+            gridSupport: false
+        }
+    )
+
+    slot brandPanel (
+        name: Brand Panel
+        staticId: REGION_POSITION_03
+        gridLayout {
+            gridSupport: false
+        }
+    )
+
+    slot contentBody (
+        name: Content Body
+        staticId: BODY
+        supports {
+            items: true
+            buttons: true
+        }
+        gridLayout {
+            maxFixedColumns: 12
+        }
+    )
+
+    slot pageFooter (
+        name: Page Footer
+        staticId: REGION_POSITION_04
+        gridLayout {
+            gridSupport: false
+        }
+    )
+
+    slot topBar (
+        name: Top Bar
+        staticId: REGION_POSITION_05
+        gridLayout {
+            gridSupport: false
+        }
+    )
+
+)
+

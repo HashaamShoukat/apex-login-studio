@@ -1,0 +1,162 @@
+list navigation-bar (
+    name: Navigation Bar
+
+    entry github (
+        label: GitHub
+        icon {
+            imageIconCssClasses: fa-github
+        }
+        layout {
+            sequence: 5
+        }
+        link {
+            target: {
+                type: url
+                url: https://github.com/HashaamShoukat/apex-login-studio
+            }
+        }
+    )
+
+    entry sign-in (
+        label: Sign In
+        icon {
+            imageIconCssClasses: fa-sign-in
+        }
+        layout {
+            sequence: 8
+        }
+        link {
+            target: {
+                page: 9999
+            }
+        }
+        serverSideCondition {
+            type: userIsPublicUser
+        }
+    )
+
+    entry --- (
+        label: ---
+        layout {
+            sequence: 20
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: separator
+            }
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+    entry app-user (
+        label: &APP_USER.
+        icon {
+            imageIconCssClasses: fa-user
+        }
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                type: url
+                url: #
+            }
+        }
+        userDefinedAttributes {
+            2: has-username
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+    entry sign-out (
+        label: Sign Out
+        icon {
+            imageIconCssClasses: fa-sign-out
+        }
+        layout {
+            sequence: 30
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: &LOGOUT_URL.
+            }
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+)
+
+list navigation-menu (
+    name: Navigation Menu
+
+    entry home (
+        label: Gallery
+        icon {
+            imageIconCssClasses: fa-th-large
+        }
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+    )
+
+    entry designer (
+        label: Designer
+        icon {
+            imageIconCssClasses: fa-paint-brush
+        }
+        layout {
+            sequence: 20
+        }
+        link {
+            target: {
+                page: 2
+            }
+        }
+    )
+
+    entry how-to-use (
+        label: How to Use
+        icon {
+            imageIconCssClasses: fa-book
+        }
+        layout {
+            sequence: 30
+        }
+        link {
+            target: {
+                page: 3
+            }
+        }
+    )
+
+    entry login-page (
+        label: Login Page
+        icon {
+            imageIconCssClasses: fa-sign-in
+        }
+        layout {
+            sequence: 40
+        }
+        link {
+            target: {
+                page: 9999
+            }
+        }
+    )
+
+)

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e7cf"/>
+      <stop offset="1" stop-color="#eac9a0"/>
+    </linearGradient>
+    <linearGradient id="d1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9a875"/>
+      <stop offset="1" stop-color="#b9774a"/>
+    </linearGradient>
+    <linearGradient id="d2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b8603f"/>
+      <stop offset="1" stop-color="#8e3a2c"/>
+    </linearGradient>
+    <linearGradient id="d3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7e2a27"/>
+      <stop offset="1" stop-color="#5a1a1f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <circle cx="380" cy="300" r="120" fill="#fff6e8" opacity=".85"/>
+  <path d="M0 560 C 260 470 520 520 760 560 S 1240 470 1600 520 V1000 H0Z" fill="url(#d1)"/>
+  <path d="M0 690 C 300 600 560 660 820 710 S 1320 600 1600 650 V1000 H0Z" fill="url(#d2)"/>
+  <path d="M0 830 C 340 760 640 820 940 860 S 1400 780 1600 800 V1000 H0Z" fill="url(#d3)"/>
+  <path d="M760 560 C 900 590 1000 640 1120 700" fill="none" stroke="#fff3df" stroke-opacity=".35" stroke-width="3"/>
+  <path d="M820 710 C 980 740 1100 800 1240 860" fill="none" stroke="#ffd9b8" stroke-opacity=".25" stroke-width="3"/>
+</svg>

@@ -1,0 +1,346 @@
+page 9999 (
+    name: Login Page
+    alias: LOGIN
+    title: Login Studio - Sign In
+    appearance {
+        pageTemplate: @modern-login
+        templateOptions: [
+            #DEFAULT#
+            ml-Design--curve
+        ]
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region background (
+        name: Background Image
+        type: staticContent
+        source {
+            htmlCode: <img src="#APP_FILES#login-bg.svg" alt="">
+        }
+        layout {
+            sequence: 10
+            slot: backgroundImage
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region brand (
+        name: Brand
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <span class="ml-Badge"><span class="fa fa-magic" aria-hidden="true"></span> Login Studio</span>
+                <h1>Hello, welcome!</h1>
+                <p>Sign-in pages for Oracle APEX. Pick a design in the gallery and copy it into your own app.</p>
+                <a class="ml-Cta" href="f?p=&APP_ID.:HOME:&APP_SESSION.">Browse the gallery</a>
+                <ul>
+                  <li>13 designs - curved panel, arc, neon, soft UI, editorial, terminal and more</li>
+                  <li>Built-in artwork backgrounds, or your own image</li>
+                  <li>Light, dark or the visitor's own choice - phone and tablet ready</li>
+                </ul>
+                <div class="ml-Slides">
+                  <blockquote>"Our users noticed the new sign-in page before anything else."<cite>Application Owner</cite></blockquote>
+                  <blockquote>"It took two minutes to give every app the same sign-in look."<cite>APEX Developer</cite></blockquote>
+                  <blockquote>"Finally a login page that feels at home on a phone."<cite>Field Supervisor</cite></blockquote>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: brandPanel
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region help (
+        name: Need Access
+        type: staticContent
+        source {
+            htmlCode: Need an account? Ask your workspace administrator.
+        }
+        layout {
+            sequence: 10
+            slot: bodyFooter
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region legal (
+        name: Legal
+        type: staticContent
+        source {
+            htmlCode: <p>Login Studio - sign-in page templates for Oracle APEX</p>
+        }
+        layout {
+            sequence: 10
+            slot: pageFooter
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region sign-in (
+        name: Login
+        title: Welcome back
+        type: staticContent
+        source {
+            htmlCode: <p class="ml-Lead">Sign in to continue to Login Studio</p>
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/login
+            templateOptions: [
+                #DEFAULT#
+                t-Form--slimPadding
+            ]
+            icon: fa-lock
+            renderComponents: belowContent
+        }
+    )
+
+    pageItem P9999_PASSWORD (
+        type: password
+        label {
+            label: Password
+            alignment: left
+        }
+        layout {
+            sequence: 20
+            region: @sign-in
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            icon: fa-key
+            width: 40
+        }
+        validation {
+            maxLength: 100
+        }
+        advanced {
+            customAttributes: autocomplete="current-password"
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P9999_REMEMBER (
+        type: checkbox
+        label {
+            label: Remember user name
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @sign-in
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: [
+                #DEFAULT#
+                margin-top-sm
+            ]
+        }
+        serverSideCondition {
+            type: expression
+            plsqlExpression: apex_authentication.persistent_cookies_enabled
+        }
+    )
+
+    pageItem P9999_USERNAME (
+        type: textField
+        label {
+            label: User name
+            alignment: left
+        }
+        layout {
+            sequence: 10
+            region: @sign-in
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            icon: fa-user
+            width: 40
+        }
+        validation {
+            maxLength: 100
+        }
+        advanced {
+            customAttributes: autocomplete="username"
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    button login (
+        buttonName: LOGIN
+        label: Sign In
+        layout {
+            sequence: 40
+            region: @sign-in
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--padTop
+            ]
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    process clear-page-s-cache (
+        name: Clear Page(s) Cache
+        type: clearSessionState
+        execution {
+            sequence: 30
+        }
+        advanced {
+            executionMappingIdentifier: 11383792712195834
+        }
+    )
+
+    process get-username-cookie (
+        name: Get Username Cookie
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                :P9999_USERNAME := apex_authentication.get_login_username_cookie;
+                :P9999_REMEMBER := case when :P9999_USERNAME is not null then 'Y' end;
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 11382991504195834
+        }
+    )
+
+    process login (
+        name: Login
+        type: invokeApi
+        invoke {
+            package: APEX_AUTHENTICATION
+            procedureOrFunction: LOGIN
+        }
+        execution {
+            sequence: 20
+        }
+        advanced {
+            executionMappingIdentifier: 11383317854195834
+        }
+
+        parameter p_password (
+            value {
+                type: item
+                item: P9999_PASSWORD
+            }
+            advanced {
+                displaySequence: 2
+            }
+        )
+
+        parameter p_set_persistent_auth (
+            parameter {
+                dataType: boolean
+                hasDefault: true
+            }
+            value {
+                type: apiDefault
+            }
+            advanced {
+                displaySequence: 3
+            }
+        )
+
+        parameter p_username (
+            value {
+                type: item
+                item: P9999_USERNAME
+            }
+            advanced {
+                displaySequence: 1
+            }
+        )
+
+    )
+
+    process set-username-cookie (
+        name: Set Username Cookie
+        type: invokeApi
+        invoke {
+            package: APEX_AUTHENTICATION
+            procedureOrFunction: SEND_LOGIN_USERNAME_COOKIE
+        }
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 11383090988195834
+        }
+
+        parameter p_consent (
+            parameter {
+                dataType: boolean
+            }
+            value {
+                type: item
+                item: P9999_REMEMBER
+            }
+            advanced {
+                displaySequence: 2
+            }
+        )
+
+        parameter p_username (
+            value {
+                type: expression
+                plsqlExpression: lower( :P9999_USERNAME )
+            }
+            advanced {
+                displaySequence: 1
+            }
+        )
+
+    )
+
+)
+

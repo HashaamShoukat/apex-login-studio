@@ -1,0 +1,134 @@
+page 3 (
+    name: How to Use
+    alias: HOW-TO-USE
+    title: Login Studio - How to Use
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            .ls-Doc { max-width: 60rem; line-height: 1.7; }
+            .ls-Doc h3 { margin: 1.75rem 0 .5rem; font-size: 1.125rem; }
+            .ls-Doc h3:first-child { margin-top: 0; }
+            .ls-Doc ol, .ls-Doc ul { padding-inline-start: 1.25rem; margin: .25rem 0 .75rem; }
+            .ls-Doc li { margin: .2rem 0; }
+            .ls-Doc pre { margin: .5rem 0 1rem; padding: .875rem 1rem; overflow-x: auto; border-radius: 8px; background: #1f2329; color: #e6edf3; font-size: .8125rem; line-height: 1.55; }
+            .ls-Doc code { font-size: .8125rem; }
+            .ls-Doc p code, .ls-Doc li code, .ls-Doc td code { padding: .05rem .35rem; border-radius: 4px; background: rgba(127,127,127,.14); }
+            .ls-Doc table { width: 100%; border-collapse: collapse; margin: .5rem 0 1rem; font-size: .875rem; }
+            .ls-Doc th, .ls-Doc td { padding: .45rem .6rem; border-bottom: 1px solid var(--ut-component-border-color, #e4e7ec); text-align: left; vertical-align: top; }
+            .ls-Doc th { font-weight: 700; opacity: .75; }
+            .ls-Doc td:first-child { font-weight: 600; white-space: nowrap; }
+            ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: How to Use
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region guide (
+        name: Use Login Studio in Your Own App
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div class="ls-Doc">
+                <h3>1. Get Login Studio into your workspace</h3>
+                <ol>
+                  <li>Download the application export <code>login-studio.sql</code> from <a href="https://github.com/HashaamShoukat/apex-login-studio" target="_blank" rel="noopener">GitHub</a>.</li>
+                  <li>In your workspace: <strong>App Builder &gt; Import</strong>, pick the file, install it with any application ID. There are no database objects - everything is in the application (APEX 26.1 or later).</li>
+                </ol>
+
+                <h3>2. Copy the template into your application</h3>
+                <ol>
+                  <li>In <em>your</em> application open <strong>Shared Components &gt; Templates &gt; Create</strong>.</li>
+                  <li>Choose <strong>Page</strong>, then <strong>As a Copy of an Existing Template</strong>, copy from application <strong>Login Studio</strong> and pick <strong>Modern Login</strong>.</li>
+                  <li>Optional: tick <em>Subscribe</em> to receive later changes when you refresh the subscription.</li>
+                </ol>
+                <p>The template is self-contained - its CSS, JavaScript and artwork travel with it. Nothing has to be added to the page itself.</p>
+
+                <h3>3. Use it on your login page</h3>
+                <ol>
+                  <li>Open your login page in Page Designer and set <strong>Appearance &gt; Page Template</strong> to <strong>Modern Login</strong>.</li>
+                  <li>Open <strong>Template Options</strong> and pick the look you built in the <a href="f?p=&APP_ID.:DESIGNER:&APP_SESSION.">Designer</a> - Design, Background, Accent Color, Color Scheme and so on. The Designer lists every option you chose.</li>
+                  <li>Keep the login region on the standard <strong>Login</strong> region template.</li>
+                </ol>
+                <p>Or copy the whole login page of this app: <strong>Create Page &gt; Copy &gt; Page from Another Application</strong> (page 9999), then adjust its texts.</p>
+
+                <h3>4. Your own background image</h3>
+                <ol>
+                  <li>Upload the picture to <strong>Shared Components &gt; Static Application Files</strong> (e.g. <code>login-photo.jpg</code>).</li>
+                  <li>On the login page add a <strong>Static Content</strong> region in the <strong>Background Image</strong> slot, template <em>Blank with Attributes</em>, with:
+                    <pre>&lt;img src="&#35;APP_FILES&#35;login-photo.jpg" alt=""&gt;</pre></li>
+                  <li>Set the template option <strong>Background</strong> to <strong>Image</strong>. With the Curved Panel, Arc and Wave designs the picture fills their coloured panel; otherwise it covers the page behind the form.</li>
+                </ol>
+                <p>No image at hand? <strong>Waves</strong>, <strong>Topography</strong>, <strong>Peaks</strong>, <strong>Rings</strong> and <strong>Grid Lines</strong> are built-in artwork drawn in the accent colours - no file needed.</p>
+
+                <h3>5. Slots - where content goes</h3>
+                <table>
+                  <tr><th>Slot</th><th>Use it for</th></tr>
+                  <tr><td>Content Body</td><td>The login region with the user name, password and Sign In button.</td></tr>
+                  <tr><td>Brand Panel</td><td>The welcome text next to the form - shown by the Curved Panel and Arc designs and the Split / Floating layouts; a banner on phones.</td></tr>
+                  <tr><td>Top Bar</td><td>A logo and links above the form.</td></tr>
+                  <tr><td>Body Header / Body Footer</td><td>Notes inside the card, above / below the form (e.g. "Need an account?").</td></tr>
+                  <tr><td>Page Footer</td><td>Under the card - copyright, links (a list shows as a row of links).</td></tr>
+                  <tr><td>Background Image</td><td>Your picture for Background = Image.</td></tr>
+                </table>
+                <p>Use the <em>Blank with Attributes</em> region template for the slots. A Brand Panel like the one on the login page of this app:</p>
+                <pre>&lt;h1&gt;Hello, welcome!&lt;/h1&gt;
+                &lt;p&gt;Sign in to manage your requests and approvals.&lt;/p&gt;
+                &lt;a class="ml-Cta" href="f?p=&amp;APP_ID.:REGISTER:&amp;APP_SESSION."&gt;Create an account&lt;/a&gt;</pre>
+
+                <h3>6. Helper classes</h3>
+                <table>
+                  <tr><th>Class</th><th>What it does</th></tr>
+                  <tr><td><code>ml-Cta</code></td><td>An outlined call-to-action link in the Brand Panel (Register, Learn more).</td></tr>
+                  <tr><td><code>ml-Lead</code></td><td>A sub-title under the login title.</td></tr>
+                  <tr><td><code>ml-Logo</code></td><td>A logo with text in the Top Bar.</td></tr>
+                  <tr><td><code>ml-Badge</code></td><td>A small pill above a headline.</td></tr>
+                  <tr><td><code>ml-Slides</code></td><td>Each child becomes a slide with dots and swipe (Split / Floating layouts).</td></tr>
+                </table>
+                <p>Built-in texts can be translated with the text messages <code>MODERN_LOGIN.CAPS_LOCK</code>, <code>MODERN_LOGIN.OFFLINE</code> and <code>MODERN_LOGIN.THEME</code> (Used in JavaScript = Yes).</p>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+        }
+    )
+
+)

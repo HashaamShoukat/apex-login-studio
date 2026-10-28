@@ -1,0 +1,880 @@
+page 2 (
+    name: Designer
+    alias: DESIGNER
+    title: Login Studio - Designer
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    javaScript {
+        executeWhenPageLoads:
+            ```javascript-browser
+            // Login Designer: every option here is a Modern Login template option (a body class).
+            // The preview iframe shows the real login page; the classes travel in its URL hash (#ml=...&bg=...).
+            (function ($) {
+                var SELECTS = [
+                    { item: "P2_DESIGN",     group: "Design" },
+                    { item: "P2_LAYOUT",     group: "Layout" },
+                    { item: "P2_BACKGROUND", group: "Background" },
+                    { item: "P2_CARD",       group: "Card Style" },
+                    { item: "P2_ACCENT",     group: "Accent Color" },
+                    { item: "P2_SCHEME",     group: "Color Scheme" },
+                    { item: "P2_SPLIT",      group: "Split Width" },
+                    { item: "P2_PHONE",      group: "On Phones" },
+                    { item: "P2_WIDTH",      group: "Form Width" },
+                    { item: "P2_CORNERS",    group: "Corners" },
+                    { item: "P2_HEADER",     group: "Header Alignment" }
+                ];
+                // isDefault = part of the template's #DEFAULT# options
+                var SWITCHES = [
+                    { item: "P2_ANIM_ENTRANCE", css: "ml-Anim--entrance",   label: "Entrance Animation",         isDefault: true },
+                    { item: "P2_ANIM_BG",       css: "ml-Anim--bg",         label: "Animated Background",        isDefault: true },
+                    { item: "P2_BUSY",          css: "ml-Fx--busy",         label: "Busy Button on Submit",      isDefault: true },
+                    { item: "P2_SHAKE",         css: "ml-Fx--shake",        label: "Shake on Error",             isDefault: true },
+                    { item: "P2_OFFLINE",       css: "ml-Fx--offline",      label: "Connection Status",          isDefault: true },
+                    { item: "P2_SLIDES",        css: "ml-Fx--slides",       label: "Auto-rotate Slides",         isDefault: true },
+                    { item: "P2_GRAIN",         css: "ml-Fx--grain",        label: "Grain Texture",              isDefault: false },
+                    { item: "P2_THEME_TOGGLE",  css: "ml-Fx--themeToggle",  label: "Theme Toggle Button",        isDefault: false },
+                    { item: "P2_HIDE_BRAND",    css: "ml-Brand-hideMobile", label: "Hide Brand Panel on Phones", isDefault: false }
+                ];
+                // designs that bring their own layout: the Layout and Split Width options do not apply
+                var OWN_LAYOUT = ["ml-Design--curve", "ml-Design--arc"];
+                // designs that draw their own card: the Card Style option does not apply
+                var OWN_CARD = ["ml-Design--curve", "ml-Design--arc", "ml-Design--neon", "ml-Design--soft", "ml-Design--line",
+                                "ml-Design--bold", "ml-Design--border", "ml-Design--editorial", "ml-Design--terminal"];
+                var frame = document.getElementById("lsd-frame"),
+                    files = frame.getAttribute("data-files");
+
+                function esc(s) { return apex.util.escapeHTML(String(s)); }
+
+                // a look passed in the URL (from the Gallery): #ml=<classes>&bg=<image path>
+                (function fromHash() {
+                    var m = /[#&]ml=([^&]*)/.exec(window.location.hash), b = /[#&]bg=([^&]*)/.exec(window.location.hash);
+                    if (!m) { return; }
+                    var cls = decodeURIComponent(m[1]).split(/\s+/);
+                    SELECTS.forEach(function (s) {
+                        var hit = $("#" + s.item + " option").filter(function () { return this.value && cls.indexOf(this.value) >= 0; }).first();
+                        apex.item(s.item).setValue(hit.length ? hit.val() : "", null, true);
+                    });
+                    SWITCHES.forEach(function (s) { apex.item(s.item).setValue(cls.indexOf(s.css) >= 0 ? "Y" : "N", null, true); });
+                    if (b) {
+                        var file = decodeURIComponent(b[1]).split("/").pop();
+                        if ($("#P2_BG_IMAGE option[value='" + file.replace(/[^\w.\-]/g, "") + "']").length) { apex.item("P2_BG_IMAGE").setValue(file, null, true); }
+                    }
+                })();
+
+                function chosen() {
+                    var cls = [], rows = [], extra = [], allDefaults = true,
+                        own = OWN_LAYOUT.indexOf($v("P2_DESIGN")) >= 0,
+                        ownCard = OWN_CARD.indexOf($v("P2_DESIGN")) >= 0;
+                    SELECTS.forEach(function (s) {
+                        var v = $v(s.item), text = $("#" + s.item + " option:selected").text();
+                        if ((own && (s.item === "P2_LAYOUT" || s.item === "P2_SPLIT")) || (ownCard && s.item === "P2_CARD")) { v = ""; text = "set by the design"; }
+                        if (v) { cls.push(v); extra.push(v); }
+                        rows.push({ group: s.group, option: text, isDefault: !v });
+                    });
+                    SWITCHES.forEach(function (s) {
+                        var on = $v(s.item) === "Y";
+                        if (on) { cls.push(s.css); }
+                        if (s.isDefault && !on) { allDefaults = false; }
+                        if (on && !s.isDefault) { extra.push(s.css); }
+                        rows.push({ group: s.label, option: on ? "On" : "Off", isDefault: false });
+                    });
+                    // the snippet keeps #DEFAULT# only while every default option is still on
+                    var snippet = allDefaults ? ["#DEFAULT#"].concat(extra) : cls;
+                    return { cls: cls, rows: rows, snippet: snippet, image: $v("P2_BACKGROUND") === "ml-Bg--image" };
+                }
+
+                function hashOf(c) {
+                    return "#ml=" + encodeURIComponent(c.cls.join(" ")) + "&bg=" + encodeURIComponent(files + $v("P2_BG_IMAGE"));
+                }
+
+                function render() {
+                    var c = chosen(), hash = hashOf(c), want = frame.getAttribute("data-url"),
+                        own = OWN_LAYOUT.indexOf($v("P2_DESIGN")) >= 0;
+                    apex.item("P2_LAYOUT")[own ? "disable" : "enable"]();
+                    apex.item("P2_SPLIT")[own ? "disable" : "enable"]();
+                    apex.item("P2_CARD")[OWN_CARD.indexOf($v("P2_DESIGN")) >= 0 ? "disable" : "enable"]();
+                    $("#P2_BG_IMAGE_CONTAINER").toggle(c.image);
+                    if ((frame.getAttribute("src") || "").split("#")[0] !== want) {
+                        frame.setAttribute("src", want + hash);
+                    } else {
+                        try { frame.contentWindow.location.hash = hash; } catch (e) { frame.setAttribute("src", want + hash); }
+                    }
+                    var html = '<dl class="lsd-Summary-list">' + c.rows.map(function (r) {
+                        return "<dt>" + esc(r.group) + "</dt><dd" + (r.isDefault ? ' class="is-default"' : "") + ">" + esc(r.option) + "</dd>";
+                    }).join("") + "</dl>";
+                    var code = "appearance {\n    pageTemplate: @modern-login\n    templateOptions: [\n"
+                             + c.snippet.map(function (x) { return "        " + x + "\n"; }).join("")
+                             + "    ]\n}";
+                    $("#lsd-summary").html(html);
+                    $("#lsd-code").text(code);
+                    $("#lsd-image-note").toggle($v("P2_BACKGROUND") === "ml-Bg--image");
+                }
+
+                $(SELECTS.concat(SWITCHES).map(function (s) { return "#" + s.item; }).concat(["#P2_BG_IMAGE"]).join(",")).on("change", render);
+
+                $("#P2_DEVICE").on("change", function () {
+                    $("#lsd-stage").attr("data-device", $v("P2_DEVICE"));
+                });
+
+                $(document).on("click", ".js-lsd-copy", function () {
+                    navigator.clipboard.writeText($("#lsd-code").text()).then(function () {
+                        apex.message.showPageSuccess("Copied - paste it into the login page's appearance block (APEXlang), or tick the same options in Page Designer.");
+                    });
+                });
+
+                $(document).on("click", ".js-lsd-open", function () {
+                    window.open(frame.getAttribute("data-url") + hashOf(chosen()), "_blank");
+                });
+
+                render();
+            })(apex.jQuery);
+            ```
+    }
+    css {
+        inline:
+            ```css
+            .lsd-Stage { display: flex; justify-content: center; align-items: center; height: min(80vh, 780px); min-height: 520px; overflow: hidden;
+                         border-radius: 12px; border: 1px solid var(--ut-component-border-color, #ddd);
+                         background: repeating-conic-gradient(rgba(0,0,0,.035) 0 25%, transparent 0 50%) 0 0 / 24px 24px; }
+            .lsd-Stage iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; transition: width .3s ease, height .3s ease, border-radius .3s ease; }
+            .lsd-Stage[data-device="TABLET"], .lsd-Stage[data-device="PHONE"] { padding: 16px 0; }
+            .lsd-Stage[data-device="TABLET"] iframe { width: 820px; max-width: calc(100% - 32px); border-radius: 20px;
+                                                     box-shadow: 0 0 0 12px #1f2329, 0 24px 48px -12px rgba(0,0,0,.45); }
+            .lsd-Stage[data-device="PHONE"] iframe { width: 390px; max-width: calc(100% - 32px); border-radius: 28px;
+                                                    box-shadow: 0 0 0 10px #1f2329, 0 24px 48px -12px rgba(0,0,0,.45); }
+            .lsd-Summary-list { display: grid; grid-template-columns: auto 1fr; gap: .375rem 1rem; margin: 0 0 1rem; font-size: .875rem; }
+            .lsd-Summary-list dt { opacity: .7; }
+            .lsd-Summary-list dd { margin: 0; font-weight: 600; }
+            .lsd-Summary-list dd.is-default::after { content: " (default)"; font-weight: 400; opacity: .6; }
+            .lsd-Code { margin: 0; padding: .875rem 1rem; overflow-x: auto; border-radius: 8px; background: #1f2329; color: #e6edf3; font-size: .8125rem; line-height: 1.5; }
+            .lsd-Note { margin: 0 0 1rem; padding: .625rem .875rem; border-radius: 8px; background: rgba(124,58,237,.08); font-size: .8125rem; line-height: 1.5; }
+            @media (max-width: 640px) { .lsd-Stage { height: 72vh; min-height: 460px; } }
+            ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Designer
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region options (
+        name: Template Options
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 4
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region preview (
+        name: Live Preview
+        type: staticContent
+        source {
+            htmlCode: <div class="lsd-Stage" id="lsd-stage" data-device="DESKTOP"><iframe id="lsd-frame" title="Login page preview" data-files="#APP_FILES#" data-url="f?p=&APP_ID.:LOGIN:&APP_SESSION."></iframe></div>
+        }
+        layout {
+            sequence: 30
+            slot: body
+            startNewRow: false
+            columnSpan: 8
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+            ]
+        }
+    )
+
+    region summary (
+        name: Your Choice
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <p class="lsd-Note" id="lsd-image-note">Background = Image: in your app put an Image region (or a Static Content region with an <code>&lt;img&gt;</code>) in the <strong>Background Image</strong> slot of the login page. Curved Panel, Arc and Wave show it inside their panel.</p>
+                <div id="lsd-summary"></div>
+                <pre class="lsd-Code" id="lsd-code"></pre>
+                ```
+        }
+        layout {
+            sequence: 10
+            parentRegion: @options
+            slot: subRegions
+        }
+        appearance {
+            template: @/content-block
+            templateOptions: [
+                #DEFAULT#
+                t-ContentBlock--h3
+            ]
+        }
+    )
+
+    pageItem P2_DESIGN (
+        type: selectList
+        label {
+            label: Design
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Curved Panel;ml-Design--curve,Arc;ml-Design--arc,Neon;ml-Design--neon,Soft UI;ml-Design--soft,Minimal Line;ml-Design--line,Diagonal;ml-Design--diagonal,Wave;ml-Design--wave,Bold;ml-Design--bold,Gradient Border;ml-Design--border,Layered Cards;ml-Design--layered,Editorial;ml-Design--editorial,Terminal;ml-Design--terminal
+            nullDisplayValue: Classic
+        }
+        layout {
+            sequence: 5
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: ml-Design--curve
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_LAYOUT (
+        type: selectList
+        label {
+            label: Layout
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Split - Form on Right;ml-Layout--splitRight,Split - Form on Left;ml-Layout--splitLeft,Floating Panel - Right;ml-Layout--floating,Floating Panel - Left;ml-Layout--floatingLeft
+            nullDisplayValue: Centered Card
+        }
+        layout {
+            sequence: 10
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_BACKGROUND (
+        type: selectList
+        label {
+            label: Background
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Mesh Gradient;ml-Bg--mesh,Bold Gradient;ml-Bg--gradient,Dot Grid;ml-Bg--dots,Waves;ml-Bg--waves,Topography;ml-Bg--topo,Peaks;ml-Bg--peaks,Rings;ml-Bg--rings,Grid Lines;ml-Bg--grid,Image;ml-Bg--image,Solid;ml-Bg--solid
+            nullDisplayValue: Design Default / Aurora
+        }
+        layout {
+            sequence: 20
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_BG_IMAGE (
+        type: selectList
+        label {
+            label: Image (preview)
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Night Sky;login-bg.svg,Dusk;bg-dusk.svg,Dunes;bg-dunes.svg,Low Poly;bg-lowpoly.svg
+            displayNullValue: false
+        }
+        layout {
+            sequence: 22
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: bg-dunes.svg
+        }
+        help {
+            helpText: Only for this preview. In your app the image is whatever you put in the Background Image slot of the login page.
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_CARD (
+        type: selectList
+        label {
+            label: Card Style
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Frosted Glass;ml-CardStyle--glass,Outlined;ml-CardStyle--outline,Borderless;ml-CardStyle--plain
+            nullDisplayValue: Elevated
+        }
+        layout {
+            sequence: 30
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_ACCENT (
+        type: selectList
+        label {
+            label: Accent Color
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Ocean;ml-Accent--ocean,Indigo;ml-Accent--indigo,Violet;ml-Accent--violet,Emerald;ml-Accent--emerald,Rose;ml-Accent--rose,Amber;ml-Accent--amber,Slate;ml-Accent--slate,Wine;ml-Accent--wine,Tangerine;ml-Accent--tangerine,Cyan;ml-Accent--cyan
+            nullDisplayValue: Design Default / Theme Color
+        }
+        layout {
+            sequence: 40
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_SCHEME (
+        type: selectList
+        label {
+            label: Color Scheme
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Dark;ml-Scheme--dark,Follow Device Setting;ml-Scheme--auto
+            nullDisplayValue: Light
+        }
+        layout {
+            sequence: 50
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_SPLIT (
+        type: selectList
+        label {
+            label: Split Width
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Half and Half;ml-Split--half,Narrow Form;ml-Split--narrow
+            nullDisplayValue: Form 40%
+        }
+        layout {
+            sequence: 52
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_PHONE (
+        type: selectList
+        label {
+            label: On Phones
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Edge to Edge;ml-Phone--edge
+            nullDisplayValue: Floating Card
+        }
+        layout {
+            sequence: 56
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_WIDTH (
+        type: selectList
+        label {
+            label: Form Width
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Compact;ml-Width--compact,Wide;ml-Width--wide
+            nullDisplayValue: Regular
+        }
+        layout {
+            sequence: 60
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_CORNERS (
+        type: selectList
+        label {
+            label: Corners
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Sharp;ml-Corners--sharp,Extra Round;ml-Corners--round
+            nullDisplayValue: Rounded
+        }
+        layout {
+            sequence: 70
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_HEADER (
+        type: selectList
+        label {
+            label: Header Alignment
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Start;ml-Header--start
+            nullDisplayValue: Centered
+        }
+        layout {
+            sequence: 80
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_ANIM_ENTRANCE (
+        type: switch
+        label {
+            label: Entrance Animation
+            alignment: left
+        }
+        layout {
+            sequence: 90
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_ANIM_BG (
+        type: switch
+        label {
+            label: Animated Background
+            alignment: left
+        }
+        layout {
+            sequence: 100
+            region: @options
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_BUSY (
+        type: switch
+        label {
+            label: Busy Button on Submit
+            alignment: left
+        }
+        layout {
+            sequence: 102
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_SHAKE (
+        type: switch
+        label {
+            label: Shake on Error
+            alignment: left
+        }
+        layout {
+            sequence: 104
+            region: @options
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_OFFLINE (
+        type: switch
+        label {
+            label: Connection Status
+            alignment: left
+        }
+        layout {
+            sequence: 106
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_SLIDES (
+        type: switch
+        label {
+            label: Auto-rotate Slides
+            alignment: left
+        }
+        layout {
+            sequence: 108
+            region: @options
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_GRAIN (
+        type: switch
+        label {
+            label: Grain Texture
+            alignment: left
+        }
+        layout {
+            sequence: 110
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: N
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_THEME_TOGGLE (
+        type: switch
+        label {
+            label: Theme Toggle Button
+            alignment: left
+        }
+        layout {
+            sequence: 112
+            region: @options
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: N
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_HIDE_BRAND (
+        type: switch
+        label {
+            label: Hide Brand Panel on Phones
+            alignment: left
+        }
+        layout {
+            sequence: 114
+            region: @options
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        default {
+            type: static
+            staticValue: N
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_DEVICE (
+        type: radioGroup
+        label {
+            label: Preview On
+            alignment: left
+        }
+        settings {
+            noOfCols: 3
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Desktop;DESKTOP,Tablet;TABLET,Phone;PHONE
+            displayNullValue: false
+        }
+        layout {
+            sequence: 10
+            region: @preview
+            slot: edit
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--radioButtonGroup
+            ]
+        }
+        default {
+            type: static
+            staticValue: DESKTOP
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    button copy (
+        buttonName: COPY
+        label: Copy APEXlang
+        layout {
+            sequence: 10
+            region: @summary
+            slot: edit
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+                t-Button--small
+            ]
+            cssClasses: js-lsd-copy
+            icon: fa-copy
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    button open-full (
+        buttonName: OPEN_FULL
+        label: Open Full Page
+        layout {
+            sequence: 20
+            region: @preview
+            slot: edit
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            cssClasses: js-lsd-open
+            icon: fa-external-link
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+)

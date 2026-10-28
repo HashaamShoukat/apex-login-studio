@@ -1,0 +1,131 @@
+file login-bg.svg (
+    mimeType: image/svg+xml
+    charSet: utf-8
+)
+
+file bg-dusk.svg (
+    mimeType: image/svg+xml
+    charSet: utf-8
+)
+
+file bg-dunes.svg (
+    mimeType: image/svg+xml
+    charSet: utf-8
+)
+
+file bg-lowpoly.svg (
+    mimeType: image/svg+xml
+    charSet: utf-8
+)
+
+file "gallery/arc.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/arc-dusk.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/aurora.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/bold.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/bold-dark.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/border.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/curve-dunes.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/curve-wine.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/diagonal.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/editorial.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/glass.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/gradient-split.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/grid-dark.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/layered.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/line.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/mesh-floating.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/neon.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/neon-rose.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/peaks.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/rings.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/soft.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/soft-dark.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/split-lowpoly.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/terminal.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/topo.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/wave.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/wave-dusk.jpg" (
+    mimeType: image/jpeg
+)
+
+file "gallery/waves.jpg" (
+    mimeType: image/jpeg
+)
