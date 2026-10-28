@@ -6,6 +6,8 @@ Beautiful sign-in pages for Oracle APEX - **one page template, 13 designs, built
 
 ![Login Studio preview](docs/images/preview.gif)
 
+**[Live demo](https://oracleapex.com/ords/r/hashaam-admin/login-studio/home)** - browse the gallery and try every option in the Designer (no sign-in needed).
+
 Login Studio is a small APEX application: a **Gallery** of ready-made looks, a **Designer** that previews every option live on phone, tablet and desktop, and the **Modern Login** page template itself, which you copy into your own application.
 
 ## Designs
