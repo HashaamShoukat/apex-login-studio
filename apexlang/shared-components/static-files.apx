@@ -18,6 +18,11 @@ file bg-lowpoly.svg (
     charSet: utf-8
 )
 
+file nav-menu-fix.js (
+    mimeType: text/javascript
+    charSet: utf-8
+)
+
 file "gallery/arc.jpg" (
     mimeType: image/jpeg
 )
