@@ -117,7 +117,7 @@ page 3 (
                   <tr><td><code>ml-Badge</code></td><td>A small pill above a headline.</td></tr>
                   <tr><td><code>ml-Slides</code></td><td>Each child becomes a slide with dots and swipe (Split / Floating layouts).</td></tr>
                 </table>
-                <p>Built-in texts can be translated with the text messages <code>MODERN_LOGIN.CAPS_LOCK</code>, <code>MODERN_LOGIN.OFFLINE</code> and <code>MODERN_LOGIN.THEME</code> (Used in JavaScript = Yes).</p>
+                <p>Built-in texts can be translated with the text messages <code>MODERN_LOGIN.CAPS_LOCK</code>, <code>MODERN_LOGIN.OFFLINE</code>, <code>MODERN_LOGIN.THEME</code> and <code>MODERN_LOGIN.SLIDES</code> (Used in JavaScript = Yes).</p>
                 </div>
                 ```
         }

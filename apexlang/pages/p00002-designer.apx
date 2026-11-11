@@ -46,23 +46,31 @@ page 2 (
                 var OWN_CARD = ["ml-Design--curve", "ml-Design--arc", "ml-Design--neon", "ml-Design--soft", "ml-Design--line",
                                 "ml-Design--bold", "ml-Design--border", "ml-Design--editorial", "ml-Design--terminal"];
                 var frame = document.getElementById("lsd-frame"),
-                    files = frame.getAttribute("data-files");
+                    files = frame.getAttribute("data-files"),
+                    current = "";
+                // a choice made while the preview was still loading is applied when it has loaded
+                frame.addEventListener("load", function () {
+                    try {
+                        var l = frame.contentWindow.location;
+                        if (current && l.href !== "about:blank" && l.hash !== current) { l.hash = current; }
+                    } catch (e) { /* cross-origin: ignore */ }
+                });
 
                 function esc(s) { return apex.util.escapeHTML(String(s)); }
 
                 // a look passed in the URL (from the Gallery): #ml=<classes>&bg=<image path>
                 (function fromHash() {
-                    var m = /[#&]ml=([^&]*)/.exec(window.location.hash), b = /[#&]bg=([^&]*)/.exec(window.location.hash);
+                    var m = /[#&]ml=([^&]*)/.exec(window.location.hash), b = /[#&]bg=([^&]*)/.exec(window.location.hash), cls, file;
                     if (!m) { return; }
-                    var cls = decodeURIComponent(m[1]).split(/\s+/);
+                    try { cls = decodeURIComponent(m[1]).split(/\s+/); } catch (e) { return; /* a damaged link: start from the defaults */ }
                     SELECTS.forEach(function (s) {
                         var hit = $("#" + s.item + " option").filter(function () { return this.value && cls.indexOf(this.value) >= 0; }).first();
                         apex.item(s.item).setValue(hit.length ? hit.val() : "", null, true);
                     });
                     SWITCHES.forEach(function (s) { apex.item(s.item).setValue(cls.indexOf(s.css) >= 0 ? "Y" : "N", null, true); });
                     if (b) {
-                        var file = decodeURIComponent(b[1]).split("/").pop();
-                        if ($("#P2_BG_IMAGE option[value='" + file.replace(/[^\w.\-]/g, "") + "']").length) { apex.item("P2_BG_IMAGE").setValue(file, null, true); }
+                        try { file = decodeURIComponent(b[1]).split("/").pop().replace(/[^\w.\-]/g, ""); } catch (e) { file = ""; }
+                        if (file && $("#P2_BG_IMAGE option[value='" + file + "']").length) { apex.item("P2_BG_IMAGE").setValue(file, null, true); }
                     }
                 })();
 
@@ -81,7 +89,7 @@ page 2 (
                         if (on) { cls.push(s.css); }
                         if (s.isDefault && !on) { allDefaults = false; }
                         if (on && !s.isDefault) { extra.push(s.css); }
-                        rows.push({ group: s.label, option: on ? "On" : "Off", isDefault: false });
+                        rows.push({ group: s.label, option: on ? "On" : "Off", isDefault: on === s.isDefault });
                     });
                     // the snippet keeps #DEFAULT# only while every default option is still on
                     var snippet = allDefaults ? ["#DEFAULT#"].concat(extra) : cls;
@@ -99,6 +107,7 @@ page 2 (
                     apex.item("P2_SPLIT")[own ? "disable" : "enable"]();
                     apex.item("P2_CARD")[OWN_CARD.indexOf($v("P2_DESIGN")) >= 0 ? "disable" : "enable"]();
                     $("#P2_BG_IMAGE_CONTAINER").toggle(c.image);
+                    current = hash;
                     if ((frame.getAttribute("src") || "").split("#")[0] !== want) {
                         frame.setAttribute("src", want + hash);
                     } else {
@@ -122,9 +131,20 @@ page 2 (
                 });
 
                 $(document).on("click", ".js-lsd-copy", function () {
-                    navigator.clipboard.writeText($("#lsd-code").text()).then(function () {
+                    var el = document.getElementById("lsd-code"), text = el.textContent;
+                    function done() {
                         apex.message.showPageSuccess("Copied - paste it into the login page's appearance block (APEXlang), or tick the same options in Page Designer.");
-                    });
+                    }
+                    // no clipboard access (plain http, or the browser said no): select the text so Ctrl+C takes it
+                    function manual() {
+                        var r = document.createRange(), ok = false;
+                        r.selectNodeContents(el);
+                        window.getSelection().removeAllRanges();
+                        window.getSelection().addRange(r);
+                        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+                        if (ok) { done(); } else { apex.message.alert("The browser did not allow copying. The text is selected - press Ctrl+C (Cmd+C)."); }
+                    }
+                    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, manual); } else { manual(); }
                 });
 
                 $(document).on("click", ".js-lsd-open", function () {

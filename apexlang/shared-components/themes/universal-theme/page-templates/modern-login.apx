@@ -317,15 +317,17 @@ pageTemplate modern-login (
                        (body.classList.contains("ml-Scheme--auto") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
               }
               function applyPreview() {
-                var m = /[#&]ml=([^&]*)/.exec(window.location.hash);
+                var m = /[#&]ml=([^&]*)/.exec(window.location.hash), want;
                 if (!m) { return; }
+                try { want = decodeURIComponent(m[1]).split(/[\s,]+/); } catch (e) { return; /* a damaged link: keep the page's own look */ }
                 Array.prototype.slice.call(body.classList).forEach(function (c) { if (LOOK.test(c)) { body.classList.remove(c); } });
-                decodeURIComponent(m[1]).split(/[\s,]+/).forEach(function (c) { if (LOOK.test(c)) { body.classList.add(c); } });
+                want.forEach(function (c) { if (LOOK.test(c)) { body.classList.add(c); } });
               }
-              function applyScheme() {
-                var s = null;
+              /* choice: "dark" / "light" from the Theme Toggle button; without it the remembered choice is used */
+              function applyScheme(choice) {
+                var s = choice || null;
                 if (!body.classList.contains("ml-Fx--themeToggle")) { return; }
-                try { s = window.localStorage.getItem("ml-scheme"); } catch (e) { s = null; }
+                if (!s) { try { s = window.localStorage.getItem("ml-scheme"); } catch (e) { s = null; } }
                 if (s !== "dark" && s !== "light") { return; }
                 body.classList.remove("ml-Scheme--dark", "ml-Scheme--auto");
                 if (s === "dark") { body.classList.add("ml-Scheme--dark"); }
@@ -345,14 +347,16 @@ pageTemplate modern-login (
             <script>
             /* Background image: the picture in the Background Image slot is also offered to the designs as
                --ml-bg-image (Curved Panel, Arc and Wave show it inside their panel). The Login Designer can
-               swap it for one of the application's images: #...&bg=<file path> */
+               swap it for one of the application's images: #...&bg=<file path>. Only this application's own
+               static files are accepted, so a link cannot put somebody else's picture on the sign-in page. */
             (function (body) {
               try {
                 var media = document.querySelector(".ml-Bg-media"), img = media && media.querySelector("img"),
-                    m = /[#&]bg=([^&]*)/.exec(window.location.hash), src = null;
+                    m = /[#&]bg=([^&]*)/.exec(window.location.hash), src = null, files = "#APP_FILES#";
                 if (m) {
                   src = decodeURIComponent(m[1]);
-                  if (!/^[\w\-.\/%]+\.(png|jpe?g|webp|svg|avif)$/i.test(src) || /^\/\/|\.\./.test(src)) { src = null; }
+                  if (!/^[\w\-.\/]+\.(png|jpe?g|webp|svg|avif)$/i.test(src) || /^\/\/|\.\./.test(src) ||
+                      (files.charAt(0) !== "#" && src.indexOf(files) !== 0)) { src = null; }
                   else if (img) { img.src = src; }
                   else { img = new Image(); img.alt = ""; img.src = src; media.appendChild(img); }
                 }
@@ -573,36 +577,44 @@ pageTemplate modern-login (
             
                 // Theme Toggle: the visitor's own light / dark choice, remembered on the device
                 $(".ml-ThemeToggle").attr("aria-label", msg("MODERN_LOGIN.THEME", "Switch between light and dark")).on("click", function () {
-                    try { window.localStorage.setItem("ml-scheme", ml.isDark() ? "light" : "dark"); } catch (e) { /* private mode */ }
-                    ml.applyScheme();
+                    var next = ml.isDark() ? "light" : "dark";
+                    try { window.localStorage.setItem("ml-scheme", next); } catch (e) { /* private mode: the choice lasts for this page only */ }
+                    ml.applyScheme(next);
                     this.setAttribute("aria-pressed", ml.isDark() ? "true" : "false");
                 }).attr("aria-pressed", ml.isDark() ? "true" : "false");
             
                 // Slides: any .ml-Slides block becomes a carousel with dots and swipe; Auto-rotate Slides plays it
                 $(".ml-Slides").each(function () {
-                    var box = this, slides = $(box).children().toArray(), i = 0, timer = null, startX = null;
+                    var box = this, slides = $(box).children().toArray(), i = 0, timer = null, startX = null, hover = false, focus = false;
                     if (slides.length < 2) { return; }
-                    var dots = $('<div class="ml-Dots" role="tablist"></div>');
+                    // the dots are plain buttons in a group; the one of the slide on show carries aria-current
+                    var dots = $('<div class="ml-Dots" role="group"></div>').attr("aria-label", msg("MODERN_LOGIN.SLIDES", "Slides"));
                     function show(n) {
                         i = (n + slides.length) % slides.length;
                         slides.forEach(function (s, k) { s.classList.toggle("is-active", k === i); s.setAttribute("aria-hidden", k === i ? "false" : "true"); });
-                        dots.children().each(function (k, d) { d.classList.toggle("is-active", k === i); d.setAttribute("aria-selected", k === i ? "true" : "false"); });
+                        dots.children().each(function (k, d) {
+                            d.classList.toggle("is-active", k === i);
+                            if (k === i) { d.setAttribute("aria-current", "true"); } else { d.removeAttribute("aria-current"); }
+                        });
                     }
                     function stop() { if (timer) { clearInterval(timer); timer = null; } }
+                    // rotation rests while the pointer or the keyboard focus is on the slides or their dots
                     function play() {
                         stop();
-                        if (has("ml-Fx--slides") && !reduceMotion) {
+                        if (has("ml-Fx--slides") && !reduceMotion && !hover && !focus) {
                             timer = setInterval(function () { if (!document.hidden) { show(i + 1); } }, 6000);
                         }
                     }
                     slides.forEach(function (s, n) {
-                        $('<button type="button" class="ml-Dot" role="tab"></button>')
+                        $('<button type="button" class="ml-Dot"></button>')
                             .attr("aria-label", (n + 1) + " / " + slides.length)
                             .on("click", function () { show(n); play(); })
                             .appendTo(dots);
                     });
-                    $(box).addClass("is-ready").after(dots)
-                        .on("mouseenter focusin", stop).on("mouseleave focusout", play)
+                    $(box).addClass("is-ready").after(dots).add(dots)
+                        .on("mouseenter", function () { hover = true; stop(); }).on("mouseleave", function () { hover = false; play(); })
+                        .on("focusin", function () { focus = true; stop(); }).on("focusout", function () { focus = false; play(); });
+                    $(box)
                         .on("touchstart", function (e) { startX = e.originalEvent.touches[0].clientX; })
                         .on("touchend", function (e) {
                             if (startX === null) { return; }
@@ -1050,7 +1062,7 @@ pageTemplate modern-login (
             ```
     }
     comments {
-        comments: Modern sign-in page (Login Studio) - a complete template, nothing to add on the page (no page JavaScript or CSS). Looks and behaviour are template options - Design (Classic, Curved Panel, Arc, Neon, Soft UI, Minimal Line, Diagonal, Wave, Bold, Gradient Border, Layered Cards, Editorial, Terminal), Layout, Background (incl. built-in artwork and your own image), Card Style, Accent Color, Color Scheme and more. Slots - Content Body (login region), Body Header / Body Footer (inside the card), Top Bar (logo and links above the form), Brand Panel (next to the form in Split / Floating layouts and the panel designs; banner on phones), Page Footer (under the card), Background Image (an image region or img - also used by the panel designs). Content helper classes - ml-Lead, ml-Badge, ml-Logo, ml-Hero-title, ml-Cta (call-to-action link in the Brand Panel), ml-Slides (each child is a slide). Optional text messages - MODERN_LOGIN.CAPS_LOCK, MODERN_LOGIN.OFFLINE, MODERN_LOGIN.THEME.
+        comments: Modern sign-in page (Login Studio) - a complete template, nothing to add on the page (no page JavaScript or CSS). Looks and behaviour are template options - Design (Classic, Curved Panel, Arc, Neon, Soft UI, Minimal Line, Diagonal, Wave, Bold, Gradient Border, Layered Cards, Editorial, Terminal), Layout, Background (incl. built-in artwork and your own image), Card Style, Accent Color, Color Scheme and more. Slots - Content Body (login region), Body Header / Body Footer (inside the card), Top Bar (logo and links above the form), Brand Panel (next to the form in Split / Floating layouts and the panel designs; banner on phones), Page Footer (under the card), Background Image (an image region or img - also used by the panel designs). Content helper classes - ml-Lead, ml-Badge, ml-Logo, ml-Hero-title, ml-Cta (call-to-action link in the Brand Panel), ml-Slides (each child is a slide). Optional text messages - MODERN_LOGIN.CAPS_LOCK, MODERN_LOGIN.OFFLINE, MODERN_LOGIN.THEME, MODERN_LOGIN.SLIDES.
     }
 
     templateOption anim-bg (

@@ -76,7 +76,7 @@ A brand panel like the demo's:
 <a class="ml-Cta" href="f?p=&APP_ID.:REGISTER:&APP_SESSION.">Create an account</a>
 ```
 
-Helper classes: `ml-Cta` (call-to-action link), `ml-Lead` (sub-title), `ml-Logo`, `ml-Badge`, `ml-Slides` (each child is a slide). Built-in texts can be translated with the text messages `MODERN_LOGIN.CAPS_LOCK`, `MODERN_LOGIN.OFFLINE` and `MODERN_LOGIN.THEME`.
+Helper classes: `ml-Cta` (call-to-action link), `ml-Lead` (sub-title), `ml-Logo`, `ml-Badge`, `ml-Slides` (each child is a slide). Built-in texts can be translated with the text messages `MODERN_LOGIN.CAPS_LOCK`, `MODERN_LOGIN.OFFLINE`, `MODERN_LOGIN.THEME` and `MODERN_LOGIN.SLIDES`.
 
 The template is self-contained - its CSS, JavaScript and artwork travel with it, and the login page needs no JavaScript or CSS of its own.
 

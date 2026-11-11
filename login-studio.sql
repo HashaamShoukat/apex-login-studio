@@ -33,7 +33,7 @@ prompt APPLICATION 210 - Login Studio
 -- Application Export:
 --   Application:     210
 --   Name:            Login Studio
---   Date and Time:   15:58 Monday November 2, 2026
+--   Date and Time:   08:02 Wednesday November 11, 2026
 --   Exported By:     WKSP_FMD
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -106,7 +106,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'Login Studio'
 ,p_file_prefix=>nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
-,p_files_version=>2461347154244
+,p_files_version=>2461356075542
 ,p_print_server_type=>'NATIVE'
 ,p_file_storage=>'DB'
 ,p_is_pwa=>'Y'
@@ -5606,12 +5606,16 @@ begin
 wwv_flow_imp.g_varchar2_table := wwv_flow_imp.empty_varchar2_table;
 wwv_flow_imp.g_varchar2_table(1) := '2F2F20415045582032362E323A20556E6976657273616C205468656D65206669726573206170657877696E646F77726573697A6564207768656E20746865207469746C6520626172206368616E6765732073697A652C20616E64206F70656E696E672074';
 wwv_flow_imp.g_varchar2_table(2) := '68652073696465206D656E750A2F2F2062656C6F77202D2D6A732D6D712D6C67206E6172726F7773206974202D20746865206D656E7520636C6F73656420616761696E206174206F6E6365206F6E2070686F6E65732E20536B6970207468617420657665';
-wwv_flow_imp.g_varchar2_table(3) := '6E74207768696C6520746865206D656E75206973206F70656E0A2F2F20616E64207468652077696E646F77206B657074206974732077696474682E0A2866756E6374696F6E20282429207B0A20202020766172206C61726765203D207061727365496E74';
-wwv_flow_imp.g_varchar2_table(4) := '28676574436F6D70757465645374796C6528646F63756D656E742E646F63756D656E74456C656D656E74292E67657450726F706572747956616C756528222D2D6A732D6D712D6C67222929207C7C20313230302C0A20202020202020207769647468203D';
-wwv_flow_imp.g_varchar2_table(5) := '2077696E646F772E696E6E657257696474683B0A20202020242E6576656E742E7370656369616C2E6170657877696E646F77726573697A6564203D207B0A2020202020202020747269676765723A2066756E6374696F6E202829207B0A20202020202020';
-wwv_flow_imp.g_varchar2_table(6) := '20202020206966202877696E646F772E696E6E65725769647468203D3D3D207769647468202626207769647468203C206C6172676520262620646F63756D656E742E626F64792E636C6173734C6973742E636F6E7461696E7328226A732D6E6176457870';
-wwv_flow_imp.g_varchar2_table(7) := '616E646564222929207B0A2020202020202020202020202020202072657475726E2066616C73653B0A2020202020202020202020207D0A2020202020202020202020207769647468203D2077696E646F772E696E6E657257696474683B0A202020202020';
-wwv_flow_imp.g_varchar2_table(8) := '20207D0A202020207D3B0A7D2928617065782E6A5175657279293B0A';
+wwv_flow_imp.g_varchar2_table(3) := '6E74207768696C6520746865206D656E75206973206F70656E0A2F2F20616E64207468652077696E646F77206B6570742069747320776964746820286E6F7468696E672068617320746F206265206C616964206F757420616761696E207468656E3B2074';
+wwv_flow_imp.g_varchar2_table(4) := '6865206E657874207265616C20726573697A6520676F6573207468726F756768206173206265666F7265292E0A2F2F20416E206578697374696E6720686F6F6B20666F7220746865206576656E74206973206B65707420616E64207374696C6C2063616C';
+wwv_flow_imp.g_varchar2_table(5) := '6C65643B20226E6176466978222073746F70732061207365636F6E6420636F707920737461636B696E672075702E0A2866756E6374696F6E20282429207B0A20202020766172207370656369616C203D20242E6576656E742E7370656369616C2C206F6C';
+wwv_flow_imp.g_varchar2_table(6) := '64203D207370656369616C2E6170657877696E646F77726573697A6564207C7C207B7D2C0A20202020202020206C61726765203D207061727365496E7428676574436F6D70757465645374796C6528646F63756D656E742E646F63756D656E74456C656D';
+wwv_flow_imp.g_varchar2_table(7) := '656E74292E67657450726F706572747956616C756528222D2D6A732D6D712D6C67222929207C7C20313230302C0A20202020202020207769647468203D2077696E646F772E696E6E657257696474683B0A20202020696620286F6C642E6E617646697829';
+wwv_flow_imp.g_varchar2_table(8) := '207B2072657475726E3B207D0A202020207370656369616C2E6170657877696E646F77726573697A6564203D20242E657874656E64287B7D2C206F6C642C207B0A20202020202020206E61764669783A20747275652C0A20202020202020207472696767';
+wwv_flow_imp.g_varchar2_table(9) := '65723A2066756E6374696F6E202829207B0A2020202020202020202020206966202877696E646F772E696E6E65725769647468203D3D3D207769647468202626207769647468203C206C6172676520262620646F63756D656E742E626F64792E636C6173';
+wwv_flow_imp.g_varchar2_table(10) := '734C6973742E636F6E7461696E7328226A732D6E6176457870616E646564222929207B0A2020202020202020202020202020202072657475726E2066616C73653B0A2020202020202020202020207D0A2020202020202020202020207769647468203D20';
+wwv_flow_imp.g_varchar2_table(11) := '77696E646F772E696E6E657257696474683B0A20202020202020202020202072657475726E206F6C642E74726967676572202626206F6C642E747269676765722E6170706C7928746869732C20617267756D656E7473293B0A20202020202020207D0A20';
+wwv_flow_imp.g_varchar2_table(12) := '2020207D293B0A7D2928617065782E6A5175657279293B0A';
 wwv_flow_imp_shared.create_app_static_file(
  p_id=>wwv_flow_imp.id(12504235221387362)
 ,p_file_name=>'nav-menu-fix.js'
@@ -5725,7 +5729,7 @@ wwv_flow_imp_shared.create_theme(
 ,p_default_required_label=>1610598484065263269
 ,p_default_navbar_list_template=>2849019392706229583
 ,p_file_prefix=>nvl(wwv_flow_application_install.get_static_theme_file_prefix(42),'#APEX_FILES#themes/theme_42/26.1/')
-,p_files_version=>2461347154244
+,p_files_version=>2461356075542
 ,p_icon_library=>'FONTAPEX'
 ,p_javascript_file_urls=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#APEX_FILES#libraries/apex/#MIN_DIRECTORY#widget.stickyWidget#MIN#.js?v=#APEX_VERSION#',
@@ -5961,36 +5965,44 @@ wwv_flow_imp_shared.create_template(
 '',
 '    // Theme Toggle: the visitor''s own light / dark choice, remembered on the device',
 '    $(".ml-ThemeToggle").attr("aria-label", msg("MODERN_LOGIN.THEME", "Switch between light and dark")).on("click", function () {',
-'        try { window.localStorage.setItem("ml-scheme", ml.isDark() ? "light" : "dark"); } catch (e) { /* private mode */ }',
-'        ml.applyScheme();',
+'        var next = ml.isDark() ? "light" : "dark";',
+'        try { window.localStorage.setItem("ml-scheme", next); } catch (e) { /* private mode: the choice lasts for this page only */ }',
+'        ml.applyScheme(next);',
 '        this.setAttribute("aria-pressed", ml.isDark() ? "true" : "false");',
 '    }).attr("aria-pressed", ml.isDark() ? "true" : "false");',
 '',
 '    // Slides: any .ml-Slides block becomes a carousel with dots and swipe; Auto-rotate Slides plays it',
 '    $(".ml-Slides").each(function () {',
-'        var box = this, slides = $(box).children().toArray(), i = 0, timer = null, startX = null;',
+'        var box = this, slides = $(box).children().toArray(), i = 0, timer = null, startX = null, hover = false, focus = false;',
 '        if (slides.length < 2) { return; }',
-'        var dots = $(''<div class="ml-Dots" role="tablist"></div>'');',
+'        // the dots are plain buttons in a group; the one of the slide on show carries aria-current',
+'        var dots = $(''<div class="ml-Dots" role="group"></div>'').attr("aria-label", msg("MODERN_LOGIN.SLIDES", "Slides"));',
 '        function show(n) {',
 '            i = (n + slides.length) % slides.length;',
 '            slides.forEach(function (s, k) { s.classList.toggle("is-active", k === i); s.setAttribute("aria-hidden", k === i ? "false" : "true"); });',
-'            dots.children().each(function (k, d) { d.classList.toggle("is-active", k === i); d.setAttribute("aria-selected", k === i ? "true" : "false"); });',
+'            dots.children().each(function (k, d) {',
+'                d.classList.toggle("is-active", k === i);',
+'                if (k === i) { d.setAttribute("aria-current", "true"); } else { d.removeAttribute("aria-current"); }',
+'            });',
 '        }',
 '        function stop() { if (timer) { clearInterval(timer); timer = null; } }',
+'        // rotation rests while the pointer or the keyboard focus is on the slides or their dots',
 '        function play() {',
 '            stop();',
-'            if (has("ml-Fx--slides") && !reduceMotion) {',
+'            if (has("ml-Fx--slides") && !reduceMotion && !hover && !focus) {',
 '                timer = setInterval(function () { if (!document.hidden) { show(i + 1); } }, 6000);',
 '            }',
 '        }',
 '        slides.forEach(function (s, n) {',
-'            $(''<button type="button" class="ml-Dot" role="tab"></button>'')',
+'            $(''<button type="button" class="ml-Dot"></button>'')',
 '                .attr("aria-label", (n + 1) + " / " + slides.length)',
 '                .on("click", function () { show(n); play(); })',
 '                .appendTo(dots);',
 '        });',
-'        $(box).addClass("is-ready").after(dots)',
-'            .on("mouseenter focusin", stop).on("mouseleave focusout", play)',
+'        $(box).addClass("is-ready").after(dots).add(dots)',
+'            .on("mouseenter", function () { hover = true; stop(); }).on("mouseleave", function () { hover = false; play(); })',
+'            .on("focusin", function () { focus = true; stop(); }).on("focusout", function () { focus = false; play(); });',
+'        $(box)',
 '            .on("touchstart", function (e) { startX = e.originalEvent.touches[0].clientX; })',
 '            .on("touchend", function (e) {',
 '                if (startX === null) { return; }',
@@ -6652,15 +6664,17 @@ wwv_flow_imp_shared.create_template(
 '           (body.classList.contains("ml-Scheme--auto") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);',
 '  }',
 '  function applyPreview() {',
-'    var m = /[#&]ml=([^&]*)/.exec(window.location.hash);',
+'    var m = /[#&]ml=([^&]*)/.exec(window.location.hash), want;',
 '    if (!m) { return; }',
+'    try { want = decodeURIComponent(m[1]).split(/[\s,]+/); } catch (e) { return; /* a damaged link: keep the page''s own look */ }',
 '    Array.prototype.slice.call(body.classList).forEach(function (c) { if (LOOK.test(c)) { body.classList.remove(c); } });',
-'    decodeURIComponent(m[1]).split(/[\s,]+/).forEach(function (c) { if (LOOK.test(c)) { body.classList.add(c); } });',
+'    want.forEach(function (c) { if (LOOK.test(c)) { body.classList.add(c); } });',
 '  }',
-'  function applyScheme() {',
-'    var s = null;',
+'  /* choice: "dark" / "light" from the Theme Toggle button; without it the remembered choice is used */',
+'  function applyScheme(choice) {',
+'    var s = choice || null;',
 '    if (!body.classList.contains("ml-Fx--themeToggle")) { return; }',
-'    try { s = window.localStorage.getItem("ml-scheme"); } catch (e) { s = null; }',
+'    if (!s) { try { s = window.localStorage.getItem("ml-scheme"); } catch (e) { s = null; } }',
 '    if (s !== "dark" && s !== "light") { return; }',
 '    body.classList.remove("ml-Scheme--dark", "ml-Scheme--auto");',
 '    if (s === "dark") { body.classList.add("ml-Scheme--dark"); }',
@@ -6680,14 +6694,16 @@ wwv_flow_imp_shared.create_template(
 '<script>',
 '/* Background image: the picture in the Background Image slot is also offered to the designs as',
 '   --ml-bg-image (Curved Panel, Arc and Wave show it inside their panel). The Login Designer can',
-'   swap it for one of the application''s images: #...&bg=<file path> */',
+'   swap it for one of the application''s images: #...&bg=<file path>. Only this application''s own',
+'   static files are accepted, so a link cannot put somebody else''s picture on the sign-in page. */',
 '(function (body) {',
 '  try {',
 '    var media = document.querySelector(".ml-Bg-media"), img = media && media.querySelector("img"),',
-'        m = /[#&]bg=([^&]*)/.exec(window.location.hash), src = null;',
+'        m = /[#&]bg=([^&]*)/.exec(window.location.hash), src = null, files = "#APP_FILES#";',
 '    if (m) {',
 '      src = decodeURIComponent(m[1]);',
-'      if (!/^[\w\-.\/%]+\.(png|jpe?g|webp|svg|avif)$/i.test(src) || /^\/\/|\.\./.test(src)) { src = null; }',
+'      if (!/^[\w\-.\/]+\.(png|jpe?g|webp|svg|avif)$/i.test(src) || /^\/\/|\.\./.test(src) ||',
+'          (files.charAt(0) !== "#" && src.indexOf(files) !== 0)) { src = null; }',
 '      else if (img) { img.src = src; }',
 '      else { img = new Image(); img.alt = ""; img.src = src; media.appendChild(img); }',
 '    }',
@@ -6968,7 +6984,8 @@ wwv_flow_imp_shared.create_template(
 ,p_template_comment=>'Modern sign-in page (Login Studio) - a complete template, nothing to add on the page (no page JavaScript or CSS). Looks and behaviour are template options - Design (Classic, Curved Panel, Arc, Neon, Soft UI, Minimal Line, Diagonal, Wave, Bold, Gradie'
 ||'nt Border, Layered Cards, Editorial, Terminal), Layout, Background (incl. built-in artwork and your own image), Card Style, Accent Color, Color Scheme and more. Slots - Content Body (login region), Body Header / Body Footer (inside the card), Top Bar'
 ||' (logo and links above the form), Brand Panel (next to the form in Split / Floating layouts and the panel designs; banner on phones), Page Footer (under the card), Background Image (an image region or img - also used by the panel designs). Content he'
-||'lper classes - ml-Lead, ml-Badge, ml-Logo, ml-Hero-title, ml-Cta (call-to-action link in the Brand Panel), ml-Slides (each child is a slide). Optional text messages - MODERN_LOGIN.CAPS_LOCK, MODERN_LOGIN.OFFLINE, MODERN_LOGIN.THEME.'
+||'lper classes - ml-Lead, ml-Badge, ml-Logo, ml-Hero-title, ml-Cta (call-to-action link in the Brand Panel), ml-Slides (each child is a slide). Optional text messages - MODERN_LOGIN.CAPS_LOCK, MODERN_LOGIN.OFFLINE, MODERN_LOGIN.THEME, MODERN_LOGIN.SLID'
+||'ES.'
 );
 wwv_flow_imp_shared.create_template_option(
  p_id=>wwv_flow_imp.id(11378391259195816)
@@ -7755,7 +7772,6 @@ wwv_flow_imp_page.create_page(
 ,p_warn_on_unsaved_changes=>null
 ,p_autocomplete_on_off=>'OFF'
 ,p_protection_level=>'D'
-,p_page_component_map=>'14'
 );
 end;
 /
@@ -7864,7 +7880,6 @@ wwv_flow_imp_page.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'Y'
 ,p_protection_level=>'C'
-,p_page_component_map=>'13'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(11719723840566688)
@@ -7952,23 +7967,31 @@ wwv_flow_imp_page.create_page(
 '    var OWN_CARD = ["ml-Design--curve", "ml-Design--arc", "ml-Design--neon", "ml-Design--soft", "ml-Design--line",',
 '                    "ml-Design--bold", "ml-Design--border", "ml-Design--editorial", "ml-Design--terminal"];',
 '    var frame = document.getElementById("lsd-frame"),',
-'        files = frame.getAttribute("data-files");',
+'        files = frame.getAttribute("data-files"),',
+'        current = "";',
+'    // a choice made while the preview was still loading is applied when it has loaded',
+'    frame.addEventListener("load", function () {',
+'        try {',
+'            var l = frame.contentWindow.location;',
+'            if (current && l.href !== "about:blank" && l.hash !== current) { l.hash = current; }',
+'        } catch (e) { /* cross-origin: ignore */ }',
+'    });',
 '',
 '    function esc(s) { return apex.util.escapeHTML(String(s)); }',
 '',
 '    // a look passed in the URL (from the Gallery): #ml=<classes>&bg=<image path>',
 '    (function fromHash() {',
-'        var m = /[#&]ml=([^&]*)/.exec(window.location.hash), b = /[#&]bg=([^&]*)/.exec(window.location.hash);',
+'        var m = /[#&]ml=([^&]*)/.exec(window.location.hash), b = /[#&]bg=([^&]*)/.exec(window.location.hash), cls, file;',
 '        if (!m) { return; }',
-'        var cls = decodeURIComponent(m[1]).split(/\s+/);',
+'        try { cls = decodeURIComponent(m[1]).split(/\s+/); } catch (e) { return; /* a damaged link: start from the defaults */ }',
 '        SELECTS.forEach(function (s) {',
 '            var hit = $("#" + s.item + " option").filter(function () { return this.value && cls.indexOf(this.value) >= 0; }).first();',
 '            apex.item(s.item).setValue(hit.length ? hit.val() : "", null, true);',
 '        });',
 '        SWITCHES.forEach(function (s) { apex.item(s.item).setValue(cls.indexOf(s.css) >= 0 ? "Y" : "N", null, true); });',
 '        if (b) {',
-'            var file = decodeURIComponent(b[1]).split("/").pop();',
-'            if ($("#P2_BG_IMAGE option[value=''" + file.replace(/[^\w.\-]/g, "") + "'']").length) { apex.item("P2_BG_IMAGE").setValue(file, null, true); }',
+'            try { file = decodeURIComponent(b[1]).split("/").pop().replace(/[^\w.\-]/g, ""); } catch (e) { file = ""; }',
+'            if (file && $("#P2_BG_IMAGE option[value=''" + file + "'']").length) { apex.item("P2_BG_IMAGE").setValue(file, null, true); }',
 '        }',
 '    })();',
 '',
@@ -7987,7 +8010,7 @@ wwv_flow_imp_page.create_page(
 '            if (on) { cls.push(s.css); }',
 '            if (s.isDefault && !on) { allDefaults = false; }',
 '            if (on && !s.isDefault) { extra.push(s.css); }',
-'            rows.push({ group: s.label, option: on ? "On" : "Off", isDefault: false });',
+'            rows.push({ group: s.label, option: on ? "On" : "Off", isDefault: on === s.isDefault });',
 '        });',
 '        // the snippet keeps #DEFAULT# only while every default option is still on',
 '        var snippet = allDefaults ? ["#DEFAULT#"].concat(extra) : cls;',
@@ -8005,6 +8028,7 @@ wwv_flow_imp_page.create_page(
 '        apex.item("P2_SPLIT")[own ? "disable" : "enable"]();',
 '        apex.item("P2_CARD")[OWN_CARD.indexOf($v("P2_DESIGN")) >= 0 ? "disable" : "enable"]();',
 '        $("#P2_BG_IMAGE_CONTAINER").toggle(c.image);',
+'        current = hash;',
 '        if ((frame.getAttribute("src") || "").split("#")[0] !== want) {',
 '            frame.setAttribute("src", want + hash);',
 '        } else {',
@@ -8028,9 +8052,20 @@ wwv_flow_imp_page.create_page(
 '    });',
 '',
 '    $(document).on("click", ".js-lsd-copy", function () {',
-'        navigator.clipboard.writeText($("#lsd-code").text()).then(function () {',
+'        var el = document.getElementById("lsd-code"), text = el.textContent;',
+'        function done() {',
 '            apex.message.showPageSuccess("Copied - paste it into the login page''s appearance block (APEXlang), or tick the same options in Page Designer.");',
-'        });',
+'        }',
+'        // no clipboard access (plain http, or the browser said no): select the text so Ctrl+C takes it',
+'        function manual() {',
+'            var r = document.createRange(), ok = false;',
+'            r.selectNodeContents(el);',
+'            window.getSelection().removeAllRanges();',
+'            window.getSelection().addRange(r);',
+'            try { ok = document.execCommand("copy"); } catch (e) { ok = false; }',
+'            if (ok) { done(); } else { apex.message.alert("The browser did not allow copying. The text is selected - press Ctrl+C (Cmd+C)."); }',
+'        }',
+'        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, manual); } else { manual(); }',
 '    });',
 '',
 '    $(document).on("click", ".js-lsd-open", function () {',
@@ -8060,7 +8095,6 @@ wwv_flow_imp_page.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'Y'
 ,p_protection_level=>'C'
-,p_page_component_map=>'17'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(11719940338566709)
@@ -8565,7 +8599,6 @@ wwv_flow_imp_page.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'Y'
 ,p_protection_level=>'C'
-,p_page_component_map=>'11'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(11722933373566711)
@@ -8648,7 +8681,7 @@ wwv_flow_imp_page.create_page_plug(
 '  <tr><td><code>ml-Badge</code></td><td>A small pill above a headline.</td></tr>',
 '  <tr><td><code>ml-Slides</code></td><td>Each child becomes a slide with dots and swipe (Split / Floating layouts).</td></tr>',
 '</table>',
-'<p>Built-in texts can be translated with the text messages <code>MODERN_LOGIN.CAPS_LOCK</code>, <code>MODERN_LOGIN.OFFLINE</code> and <code>MODERN_LOGIN.THEME</code> (Used in JavaScript = Yes).</p>',
+'<p>Built-in texts can be translated with the text messages <code>MODERN_LOGIN.CAPS_LOCK</code>, <code>MODERN_LOGIN.OFFLINE</code>, <code>MODERN_LOGIN.THEME</code> and <code>MODERN_LOGIN.SLIDES</code> (Used in JavaScript = Yes).</p>',
 '</div>'))
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'expand_shortcuts', 'N',
@@ -8670,7 +8703,6 @@ wwv_flow_imp_page.create_page(
 ,p_page_template_options=>'#DEFAULT#:ml-Design--curve'
 ,p_page_is_public_y_n=>'Y'
 ,p_protection_level=>'C'
-,p_page_component_map=>'12'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(11382096011195833)
